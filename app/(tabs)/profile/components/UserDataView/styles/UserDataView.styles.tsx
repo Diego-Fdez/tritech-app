@@ -17,4 +17,10 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#0a7ea4',
   },
+  textError: {
+    color: '#d71a1a',
+    fontSize: normalize(12),
+    fontWeight: '400',
+    fontFamily: 'UbuntuRegular',
+  },
 });

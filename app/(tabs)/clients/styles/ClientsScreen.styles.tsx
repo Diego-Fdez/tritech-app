@@ -44,4 +44,14 @@ export const styles = StyleSheet.create({
     borderEndWidth: 1,
     borderStartWidth: 1,
   },
+  dataContainer: {
+    height: 'auto',
+    width: '100%',
+  },
+  loadingContainer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

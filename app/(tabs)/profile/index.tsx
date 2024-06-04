@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,12 +15,11 @@ import { Colors } from '@/constants/Colors';
 import { styles } from './styles/Profile.styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserDataView } from './components';
+import { useProfile } from './hooks';
 
 const Profile = () => {
   const colorScheme = useColorScheme();
-  const [isEnabled, setIsEnabled] = useState(false);
-
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const { isEnabled, toggleSwitch } = useProfile();
 
   return (
     <SafeAreaView style={styles.container}>

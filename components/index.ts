@@ -8,3 +8,4 @@ export * from './navigation/TabBarIcon';
 export { default as NavView } from './NavView/NavView';
 export { default as NoDataView } from './NoDataView/NoDataView';
 export { default as CountriesView } from './CountriesView/CountriesView';
+export { default as ErrorView } from './ErrorView/ErrorView';

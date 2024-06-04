@@ -3,6 +3,7 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import * as yup from 'yup';
 import { Toast } from 'toastify-react-native';
+import { API_URL } from '@/constants';
 
 interface DataInterface {
   email: string;
@@ -21,7 +22,7 @@ const useRegister = () => {
     try {
       setIsLoading(true);
 
-      await axios.post(`http://192.168.0.4:4000/api/v1/users`, {
+      await axios.post(`${API_URL}/users`, {
         email: email.toLowerCase().trim(),
         password: password.trim(),
         fullName,

@@ -4,11 +4,12 @@ import { router } from 'expo-router';
 import * as yup from 'yup';
 import { API_URL } from '@/constants';
 import { useUserStore } from '@/store';
+import { userInformationAdapter } from '@/app/(tabs)/profile/adapters';
 
 interface LoginDataInterface {
   accessToken: string;
   user: {
-    id: number;
+    id: string;
     fullName: string;
     email: string;
     country: string;
@@ -27,6 +28,7 @@ interface DataInterface {
 
 const useLogin = () => {
   const setUser = useUserStore((state) => state.setUser);
+  const setToken = useUserStore((state) => state.setToken);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup
@@ -49,14 +51,15 @@ const useLogin = () => {
       setIsLoading(true);
 
       const { data }: AxiosResponse<LoginDataInterface> = await axios.post(
-        `http://192.168.0.4:4000/api/v1/auth`,
+        `${API_URL}/auth`,
         {
           email: email.toLowerCase().trim(),
           password: password.trim(),
         }
       );
 
-      setUser(data?.user, data?.accessToken);
+      setUser(userInformationAdapter(data?.user));
+      setToken(data?.accessToken);
       router.navigate('/(tabs)');
     } catch (error) {
       if (error instanceof Error) {
