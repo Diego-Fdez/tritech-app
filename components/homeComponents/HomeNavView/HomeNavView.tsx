@@ -7,8 +7,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ThemedText } from '@/components';
 import { styles } from './styles/HomeNavView.styles';
+import { useUserStore } from '@/store';
 
 const HomeNavView = () => {
+  const user = useUserStore((state) => state.user);
   const { width } = Dimensions.get('window');
   const animatedValue = useSharedValue(width);
 
@@ -31,7 +33,7 @@ const HomeNavView = () => {
       <View style={styles.textContainer}>
         <ThemedText type='defaultSemiBold'>Bienvenido </ThemedText>
         <ThemedText type='subtitle' style={styles.userName}>
-          Diego
+          {user?.fullName?.split(' ')[0]}
         </ThemedText>
       </View>
     </Animated.View>

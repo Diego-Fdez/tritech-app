@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import normalize from 'react-native-normalize';
+import { tintColorLight } from '@/constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -22,10 +23,25 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: normalize(8),
     position: 'relative',
-    marginBottom: normalize(20, 'height'),
+    marginBottom: normalize(30, 'height'),
   },
   icon: {
     position: 'absolute',
     right: normalize(10, 'width'),
+  },
+  clientButton: {
+    width: '100%',
+    height: normalize(50, 'height'),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: normalize(16),
+    backgroundColor: 'transparent',
+    marginBottom: normalize(20, 'height'),
+    borderBottomWidth: 1,
+    borderEndColor: '#0a7da485',
+    borderStartColor: '#0a7da485',
+    borderBottomColor: tintColorLight,
+    borderEndWidth: 1,
+    borderStartWidth: 1,
   },
 });

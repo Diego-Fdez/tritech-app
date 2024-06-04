@@ -11,6 +11,7 @@ export type ThemedButtonProps = TouchableOpacityProps & {
   lightColor?: string;
   darkColor?: string;
   title: string;
+  handlePress?: () => void;
 };
 
 const ThemedButton = ({
@@ -18,10 +19,15 @@ const ThemedButton = ({
   lightColor,
   darkColor,
   title,
+  handlePress,
   ...rest
 }: ThemedButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.container, style]} {...rest}>
+    <TouchableOpacity
+      style={[styles.container, style]}
+      {...rest}
+      onPress={handlePress}
+    >
       <ThemedText type='defaultSemiBold' style={styles.text}>
         {title}
       </ThemedText>

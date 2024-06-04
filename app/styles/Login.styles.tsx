@@ -44,4 +44,25 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: normalize(20, 'height'),
   },
+  errorText: {
+    color: '#e41414',
+    fontSize: normalize(12),
+    fontWeight: '400',
+    fontFamily: 'UbuntuRegular',
+    marginTop: normalize(-10, 'height'),
+  },
+  dropDown: {
+    borderWidth: 1,
+    borderColor: '#0a7ea4',
+    marginBottom: normalize(10, 'height'),
+    borderRadius: normalize(8),
+    shadowColor: '#0a7ea4',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 4.59,
+    elevation: 5,
+  },
 });
