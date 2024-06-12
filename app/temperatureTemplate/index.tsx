@@ -1,5 +1,4 @@
 import { SafeAreaView, ScrollView } from 'react-native';
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { styles } from './styles/TemperatureTemplate.styles';
 import {
@@ -12,12 +11,21 @@ import {
 import { ClientPicker, TemplateInformation } from './components';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { useTemperatureTemplate } from './context/TemperatureTemplateProvider';
 
 const TemplateScreen = () => {
   const colorScheme = useColorScheme();
-  const [tandemQuantity, setTandemQuantity] = useState<number>(0);
-  const [millQuantity, setMillQuantity] = useState<number>(0);
-  const [client, setClient] = useState<string>('');
+  const {
+    tandemQuantity,
+    setTandemQuantity,
+    millQuantity,
+    setMillQuantity,
+    client,
+    setClient,
+    handleSubmit,
+    handleCreateTemplate,
+    isLoading,
+  } = useTemperatureTemplate();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,17 +78,20 @@ const TemplateScreen = () => {
               onChangeText={(text) => setMillQuantity(Number(text))}
             />
           </ThemedView>
-          {tandemQuantity > 0 && millQuantity > 0 && client !== '' && (
-            <>
-              <TemplateInformation
-                tandemQuantity={tandemQuantity}
-                millQuantity={millQuantity}
-              />
-              <ThemedView style={styles.buttonContainer}>
-                <ThemedButton title='Crear formato' />
-              </ThemedView>
-            </>
-          )}
+          {tandemQuantity > 0 &&
+            millQuantity > 0 &&
+            client?.clientName !== '' && (
+              <>
+                <TemplateInformation />
+                <ThemedView style={styles.buttonContainer}>
+                  <ThemedButton
+                    title={isLoading ? 'Cargando...' : 'Crear formato'}
+                    handlePress={handleCreateTemplate}
+                    disabled={isLoading}
+                  />
+                </ThemedView>
+              </>
+            )}
         </ScrollView>
       </ThemedView>
     </SafeAreaView>
