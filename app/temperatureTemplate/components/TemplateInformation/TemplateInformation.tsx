@@ -7,38 +7,25 @@ import { styles } from './styles/TemplateInformation.styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { randomIdGenerator } from '@/utils';
+import { useTemperatureTemplate } from '../../context/TemperatureTemplateProvider';
 
-interface TemplateInformationProps {
-  tandemQuantity: number;
-  millQuantity: number;
-}
-
-const TemplateInformation = ({
-  tandemQuantity,
-  millQuantity,
-}: TemplateInformationProps) => {
+const TemplateInformation = () => {
   const colorScheme = useColorScheme();
-  const tandemArray = Array.from(
-    { length: tandemQuantity },
-    (_, index) => index + 1
-  );
-  const millArray = Array.from(
-    { length: millQuantity },
-    (_, index) => index + 1
-  );
+  const { TANDEM_ARRAY, MILL_ARRAY, handleCheckboxChange, checkboxes } =
+    useTemperatureTemplate();
 
   return (
     <>
-      {tandemArray?.map((index) => (
+      {TANDEM_ARRAY?.map((tandemIndex) => (
         <ThemedView style={styles.container} key={randomIdGenerator()}>
           <ThemedText type='subtitle' style={styles.titles}>
-            Tandem {index}
+            Tandem {tandemIndex}
           </ThemedText>
           <>
-            {millArray?.map((index) => (
+            {MILL_ARRAY?.map((millIndex) => (
               <View key={randomIdGenerator()} style={styles.wrapper}>
                 <ThemedText type='defaultSemiBold' style={styles.titles}>
-                  Molino {index}
+                  Molino {millIndex}
                 </ThemedText>
                 <FlatList
                   data={COMPONENTS}
@@ -65,8 +52,18 @@ const TemplateInformation = ({
                             fontFamily: 'UbuntuRegular',
                             color: Colors[colorScheme ?? 'light'].text,
                           }}
+                          isChecked={
+                            checkboxes[
+                              `${tandemIndex}-${millIndex}-${item?.component1}`
+                            ] || false
+                          }
                           onPress={(isChecked: boolean) => {
-                            console.log(isChecked);
+                            handleCheckboxChange(
+                              tandemIndex,
+                              millIndex,
+                              item?.component1,
+                              isChecked
+                            );
                           }}
                         />
                       </ThemedView>
@@ -84,8 +81,18 @@ const TemplateInformation = ({
                             fontFamily: 'UbuntuRegular',
                             color: Colors[colorScheme ?? 'light'].text,
                           }}
+                          isChecked={
+                            checkboxes[
+                              `${tandemIndex}-${millIndex}-${item?.component2}`
+                            ] || false
+                          }
                           onPress={(isChecked: boolean) => {
-                            console.log(isChecked);
+                            handleCheckboxChange(
+                              tandemIndex,
+                              millIndex,
+                              item?.component2,
+                              isChecked
+                            );
                           }}
                         />
                       </ThemedView>

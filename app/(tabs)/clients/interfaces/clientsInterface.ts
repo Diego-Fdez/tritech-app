@@ -11,3 +11,8 @@ export interface ClientsResponseInterface {
   message: string;
   statusCode: number;
 }
+
+export interface ClientsResponseWithoutData {
+  message: string;
+  statusCode: number;
+}

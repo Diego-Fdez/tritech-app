@@ -16,6 +16,14 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  addButton: {
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: normalize(6, 'width'),
+    marginBottom: normalize(20, 'height'),
+  },
   inputContainer: {
     width: '100%',
     height: normalize(40, 'height'),
@@ -45,8 +53,8 @@ export const styles = StyleSheet.create({
     borderStartWidth: 1,
   },
   dataContainer: {
-    height: 'auto',
     width: '100%',
+    paddingBottom: normalize(20, 'height'),
   },
   loadingContainer: {
     flex: 1,

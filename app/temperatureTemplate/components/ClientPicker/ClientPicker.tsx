@@ -4,32 +4,19 @@ import { Entypo } from '@expo/vector-icons';
 import { styles } from './styles/ClientPicker.styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-
-const CLIENTS = [
-  {
-    id: '1',
-    clientName: 'Taboga',
-  },
-  {
-    id: '2',
-    clientName: 'El Viejo',
-  },
-  {
-    id: '3',
-    clientName: 'Catsa',
-  },
-];
+import { useClients } from '@/app/(tabs)/clients/hooks';
 
 interface ClientPickerPropsInterface {
-  setClient: (client: string) => void;
+  setClient: (client: { id: string; clientName: string }) => void;
 }
 
 const ClientPicker = ({ setClient }: ClientPickerPropsInterface) => {
   const colorScheme = useColorScheme();
+  const { clients, isPending } = useClients();
 
   return (
     <SelectDropdown
-      data={CLIENTS}
+      data={clients || []}
       onSelect={(selectedItem) => {
         setClient(selectedItem);
       }}
@@ -47,8 +34,11 @@ const ClientPicker = ({ setClient }: ClientPickerPropsInterface) => {
                 styles.dropdownButtonTxtStyle,
               ]}
             >
-              {(selectedItem && selectedItem.clientName) ||
-                'Selecciona un cliente'}
+              {selectedItem
+                ? 'Selecciona un cliente'
+                : isPending
+                ? 'Cargando...'
+                : 'Selecciona un cliente'}
             </Text>
             <Entypo
               name={isOpened ? 'chevron-small-up' : 'chevron-small-down'}
@@ -72,6 +62,7 @@ const ClientPicker = ({ setClient }: ClientPickerPropsInterface) => {
       }}
       showsVerticalScrollIndicator={false}
       dropdownStyle={styles.dropdownMenuStyle}
+      disabled={isPending}
     />
   );
 };
