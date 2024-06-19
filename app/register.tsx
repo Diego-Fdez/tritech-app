@@ -28,8 +28,6 @@ const RegisterScreen = () => {
       password: '',
       fullName: '',
       country: '',
-      phone: '',
-      web: '',
     },
     resolver: yupResolver(schema),
   });
@@ -123,51 +121,6 @@ const RegisterScreen = () => {
           />
           {errors.password && (
             <Text style={styles.errorText}>{errors.password.message}</Text>
-          )}
-          <ThemedText type='default'>Número de teléfono</ThemedText>
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <ThemedInput
-                placeholder='50683215708'
-                keyboardType='phone-pad'
-                style={styles.input}
-                placeholderTextColor={
-                  Colors[colorScheme ?? 'light'].tabIconDefault
-                }
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
-            name='phone'
-          />
-          {errors.phone && (
-            <Text style={styles.errorText}>{errors.phone.message}</Text>
-          )}
-          <ThemedText type='default'>Web/LinkedIn</ThemedText>
-          <Controller
-            control={control}
-            rules={{ required: false }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <ThemedInput
-                placeholder='www.tritech.com'
-                keyboardType='default'
-                style={styles.input}
-                placeholderTextColor={
-                  Colors[colorScheme ?? 'light'].tabIconDefault
-                }
-                value={value ?? ''}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                autoCapitalize='none'
-              />
-            )}
-            name='web'
-          />
-          {errors.web && (
-            <Text style={styles.errorText}>{errors.web.message}</Text>
           )}
           <ThemedButton
             title={isLoading ? 'Cargando...' : 'Registrarme'}

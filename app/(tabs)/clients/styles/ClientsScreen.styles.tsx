@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   },
   dataContainer: {
     width: '100%',
-    paddingBottom: normalize(20, 'height'),
+    marginBottom: normalize(105, 'height'),
   },
   loadingContainer: {
     flex: 1,

@@ -84,7 +84,7 @@ const TemperatureTemplateProvider = ({
   async function handleCreateTemplate() {
     const templateBody = {
       clientId: client?.id,
-      templateName: `Temperaturas ${client?.clientName}`,
+      templateName: `Temperaturas bronces ${client?.clientName}`,
       createdBy: user?.id,
     };
 
@@ -99,7 +99,7 @@ const TemperatureTemplateProvider = ({
         );
       }
 
-      await handleCreateSugarCaneMill(data?.data?.id);
+      await handleCreateMillComponent(data?.data?.id);
     } catch (error) {
       console.log(error);
     } finally {
@@ -107,29 +107,30 @@ const TemperatureTemplateProvider = ({
     }
   }
 
-  async function handleCreateSugarCaneMill(
+  async function handleCreateMillComponent(
     templateId: string
   ): Promise<SugarCaneMillsResponse | void> {
     const uniqueMills = new Set<string>();
 
     Object.keys(checkboxes).forEach((item) => {
-      const [tandem, mill] = item.split(', ').slice(0, 2);
-      uniqueMills.add(`${tandem}, ${mill}`);
+      const [tandem, mill, component] = item.split(', ').slice(0, 3);
+      uniqueMills.add(`${tandem}, ${mill}, ${component}`);
     });
 
     // Construir el array de objetos sugarCaneMillBody
     const sugarCaneMillBodyArray = Array.from(uniqueMills).map((entry) => {
-      const [tandem, mill] = entry.split(', ');
+      const [tandem, mill, component] = entry.split(', ');
       return {
-        tandemCount: parseInt(tandem.split(' ')[1], 10),
-        millName: mill.toLowerCase().trim(),
+        tandemNumber: parseInt(tandem.split(' ')[1], 10),
+        millName: mill.trim(),
         templateId,
+        componentName: component.trim(),
       };
     });
 
     try {
       const { data }: AxiosResponse<SugarCaneMillsResponse> = await axios.post(
-        `${API_URL}/sugar-cane-mills`,
+        `${API_URL}/mill-components`,
         sugarCaneMillBodyArray,
         customHeader
       );
@@ -150,17 +151,18 @@ const TemperatureTemplateProvider = ({
     const uniqueMills = new Set<string>();
 
     Object.keys(checkboxes).forEach((item) => {
-      const [tandem, mill] = item.split(', ').slice(0, 2);
-      uniqueMills.add(`${tandem}, ${mill}`);
+      const [tandem, mill, component] = item.split(', ').slice(0, 3);
+      uniqueMills.add(`${tandem}, ${mill}, ${component}`);
     });
 
     // Construir el array de objetos sugarCaneMillBody
     const sugarCaneMillBodyArray = Array.from(uniqueMills).map((entry) => {
-      const [tandem, mill] = entry.split(', ');
+      const [tandem, mill, component] = entry.split(', ');
       return {
         tandemCount: parseInt(tandem.split(' ')[1], 10),
         millName: mill,
         templateId: '1',
+        component,
       };
     });
     console.log(sugarCaneMillBodyArray);

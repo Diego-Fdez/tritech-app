@@ -6,9 +6,7 @@ export interface UserInterface {
   role: string;
   createdAt: string;
   updatedAt: string;
-  web?: string;
   country: string;
-  phone: string;
 }
 
 export interface UserResponseInterface {
@@ -22,7 +20,5 @@ export interface UserUpdateInformation {
   email?: string;
   password?: string;
   role?: string;
-  web?: string;
   country?: string;
-  phone?: string;
 }

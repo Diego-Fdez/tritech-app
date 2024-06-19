@@ -30,9 +30,7 @@ const UserDataView = ({ isEnable }: UserDataViewProps) => {
       email: '',
       password: '',
       fullName: '',
-      phone: '',
       country: '',
-      web: '',
     },
     resolver: yupResolver(schema),
   });
@@ -113,31 +111,7 @@ const UserDataView = ({ isEnable }: UserDataViewProps) => {
           name='password'
         />
       </ThemedView>
-      <ThemedView style={styles.container}>
-        <ThemedText type='defaultSemiBold'>Número de teléfono</ThemedText>
-        {errors.phone && (
-          <Text style={styles.textError}>{errors.phone.message}</Text>
-        )}
-        <Controller
-          control={control}
-          rules={{ required: false }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder='50683215708'
-              style={customStyle}
-              placeholderTextColor={
-                Colors[colorScheme ?? 'light'].tabIconDefault
-              }
-              keyboardType='phone-pad'
-              editable={isEnable}
-              value={value || user?.phone}
-              onChangeText={onChange}
-              onBlur={onBlur}
-            />
-          )}
-          name='phone'
-        />
-      </ThemedView>
+      <ThemedView style={styles.container}></ThemedView>
       <ThemedView style={styles.container}>
         <ThemedText type='defaultSemiBold'>País</ThemedText>
         {errors.country && (
@@ -162,30 +136,7 @@ const UserDataView = ({ isEnable }: UserDataViewProps) => {
           name='country'
         />
       </ThemedView>
-      <ThemedView style={styles.container}>
-        <ThemedText type='defaultSemiBold'>Web/LinkedIn</ThemedText>
-        {errors.web && (
-          <Text style={styles.textError}>{errors.web.message}</Text>
-        )}
-        <Controller
-          control={control}
-          rules={{ required: false }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder='www.tritech.com'
-              style={customStyle}
-              placeholderTextColor={
-                Colors[colorScheme ?? 'light'].tabIconDefault
-              }
-              editable={isEnable}
-              value={value || user?.web}
-              onChangeText={onChange}
-              onBlur={onBlur}
-            />
-          )}
-          name='web'
-        />
-      </ThemedView>
+      <ThemedView style={styles.container}></ThemedView>
       {isEnable && (
         <ThemedView style={styles.container}>
           <ThemedButton

@@ -19,6 +19,9 @@ const useClients = () => {
   const [newClientModal, setNewClientModal] = useState<boolean>(false);
   const [newClientName, setNewClientName] = useState<string>('');
   const [country, setCountry] = useState<string>('');
+  const [clientId, setClientId] = useState<string>('');
+  const [clientsOptionsModal, setClientsOptionsModal] =
+    useState<boolean>(false);
   const {
     data: clients,
     isPending,
@@ -39,6 +42,10 @@ const useClients = () => {
 
   const mutation = useMutation({
     mutationFn: handleCreateClient,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: handleDeleteClient,
   });
 
   const customHeader = {
@@ -88,7 +95,7 @@ const useClients = () => {
       await axios.post(
         `${API_URL}/clients`,
         {
-          clientName: newClientName.trim(),
+          clientName: newClientName.toLocaleLowerCase().trim(),
           country,
         },
         customHeader
@@ -98,6 +105,49 @@ const useClients = () => {
     Alert.alert('Éxito', 'Cliente creado correctamente');
 
     return data;
+  }
+
+  function onClientsOptionsModal(id: string, clientName: string) {
+    setClientId(id);
+    setClientName(clientName);
+    setClientsOptionsModal(!clientsOptionsModal);
+  }
+
+  async function handleDeleteClient() {
+    const { data }: AxiosResponse<ClientsResponseWithoutData> =
+      await axios.delete(`${API_URL}/clients/${clientId}`, customHeader);
+
+    if (data?.statusCode === 204) {
+      setClientId('');
+      Alert.alert('Éxito', 'Cliente eliminado correctamente');
+      setClientsOptionsModal(!clientsOptionsModal);
+      setClientName('');
+    }
+
+    return data;
+  }
+
+  async function handleUpdateClient(
+    clientId: string,
+    clientName: string,
+    country: string
+  ) {
+    const clientUpdateBody = {
+      clientName: clientName.toLowerCase().trim(),
+      country,
+    };
+
+    const { data } = await axios.patch(
+      `${API_URL}/clients/${clientId}`,
+      clientUpdateBody,
+      customHeader
+    );
+
+    if (data?.statusCode === 200) {
+      Alert.alert('Éxito', 'Cliente actualizado correctamente');
+      setClientsOptionsModal(!clientsOptionsModal);
+      setClientName('');
+    }
   }
 
   return {
@@ -118,6 +168,10 @@ const useClients = () => {
     newClientName,
     setNewClientName,
     mutation,
+    clientsOptionsModal,
+    setClientsOptionsModal,
+    onClientsOptionsModal,
+    deleteMutation,
   };
 };
 

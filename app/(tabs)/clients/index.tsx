@@ -19,6 +19,7 @@ import { useClients } from './hooks';
 import {
   ClientsByNameModal,
   ClientsListView,
+  ClientsOptionsModal,
   NewClientModal,
 } from './components';
 import { useUserStore } from '@/store';
@@ -39,6 +40,10 @@ const ClientsScreen = () => {
     clientsByName,
     onNewClientModal,
     newClientModal,
+    clientsOptionsModal,
+    setClientsOptionsModal,
+    onClientsOptionsModal,
+    deleteMutation,
   } = useClients();
 
   return (
@@ -90,7 +95,10 @@ const ClientsScreen = () => {
                 <ThemedText type='defaultSemiBold'>Cargando...</ThemedText>
               </ThemedView>
             ) : (
-              <ClientsListView clients={clients || []} />
+              <ClientsListView
+                clients={clients || []}
+                onClientsOptionsModal={onClientsOptionsModal}
+              />
             )}
           </>
         </ThemedView>
@@ -99,10 +107,17 @@ const ClientsScreen = () => {
         clientsModal={clientsModal}
         onCloseModal={onCloseModal}
         clientsByName={clientsByName || []}
+        onClientsOptionsModal={onClientsOptionsModal}
       />
       <NewClientModal
         onCloseModal={onNewClientModal}
         newClientModal={newClientModal}
+      />
+      <ClientsOptionsModal
+        clientsOptionsModal={clientsOptionsModal}
+        setClientsOptionsModal={setClientsOptionsModal}
+        deleteMutation={deleteMutation}
+        clientName={clientName}
       />
     </SafeAreaView>
   );

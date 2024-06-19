@@ -5,9 +5,7 @@ interface User {
   fullName: string;
   email: string;
   country: string;
-  phone: string;
   role: string;
-  web?: string;
   createdAt: string;
   updatedAt: string;
 }

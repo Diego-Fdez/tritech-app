@@ -21,8 +21,6 @@ const useProfile = () => {
         .max(20, 'La contraseña no puede tener más de 20 caracteres'),
       fullName: yup.string(),
       country: yup.string(),
-      phone: yup.string(),
-      web: yup.string(),
     })
     .required();
 

@@ -10,12 +10,14 @@ interface ClientsByNameModalProps {
   clientsModal: boolean;
   onCloseModal: () => void;
   clientsByName: ClientsInterface[];
+  onClientsOptionsModal: (id: string, clientName: string) => void;
 }
 
 const ClientsByNameModal = ({
   clientsModal,
   onCloseModal,
   clientsByName,
+  onClientsOptionsModal,
 }: ClientsByNameModalProps) => {
   const { isLoading } = useClients();
 
@@ -33,7 +35,12 @@ const ClientsByNameModal = ({
         <ThemedText type='title' style={styles.title}>
           Resultados de búsqueda:
         </ThemedText>
-        {!isLoading && <ClientsListView clients={clientsByName} />}
+        {!isLoading && (
+          <ClientsListView
+            clients={clientsByName}
+            onClientsOptionsModal={onClientsOptionsModal}
+          />
+        )}
       </ThemedView>
     </Modal>
   );

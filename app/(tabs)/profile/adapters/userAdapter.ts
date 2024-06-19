@@ -10,8 +10,6 @@ export const userInformationAdapter = (
     role: userData.role,
     createdAt: userData.createdAt,
     updatedAt: userData.updatedAt,
-    web: userData?.web ?? '',
     country: userData?.country,
-    phone: userData?.phone,
   };
 };

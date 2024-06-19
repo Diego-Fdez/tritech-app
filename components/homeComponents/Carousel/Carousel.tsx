@@ -1,6 +1,5 @@
 import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue } from 'react-native-reanimated';
-import { router } from 'expo-router';
 import { BUTTONS_DATA } from './constants';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -38,7 +37,7 @@ const Carousel = () => {
       >
         {BUTTONS_DATA.map((item, index) => (
           <TouchableOpacity
-            onPress={() => router.navigate(item.redirectTo)}
+            onPress={item?.fn}
             key={item.id}
             style={[
               styles.card,

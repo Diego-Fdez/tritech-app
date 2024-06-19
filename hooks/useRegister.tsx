@@ -9,16 +9,14 @@ interface DataInterface {
   email: string;
   password: string;
   fullName: string;
-  phone: string;
   country: string;
-  web?: string;
 }
 
 const useRegister = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function handleRegister(user: DataInterface) {
-    const { email, password, fullName, phone, country } = user;
+    const { email, password, fullName, country } = user;
     try {
       setIsLoading(true);
 
@@ -26,9 +24,7 @@ const useRegister = () => {
         email: email.toLowerCase().trim(),
         password: password.trim(),
         fullName,
-        phone: phone.toString().trim(),
         country,
-        web: user?.web ?? '',
       });
 
       Toast.success(`Bienvenido ${fullName.split(' ')[0]}`);
@@ -57,9 +53,7 @@ const useRegister = () => {
         .max(20, 'La contraseña no puede tener más de 20 caracteres')
         .required('La contraseña es obligatoria'),
       fullName: yup.string().required('El nombre es obligatorio'),
-      phone: yup.string().required('El teléfono es obligatorio'),
       country: yup.string().required('El país es obligatorio'),
-      web: yup.string(),
     })
     .required();
 

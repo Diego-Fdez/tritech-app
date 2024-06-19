@@ -35,7 +35,7 @@ const CountriesView = ({ setCountry, style }: CountriesViewPropsInterface) => {
                 styles.dropdownButtonTxtStyle,
               ]}
             >
-              {(selectedItem && selectedItem.name) || 'Selecciona un cliente'}
+              {(selectedItem && selectedItem.name) || 'Selecciona un país'}
             </Text>
             <Entypo
               name={isOpened ? 'chevron-small-up' : 'chevron-small-down'}
