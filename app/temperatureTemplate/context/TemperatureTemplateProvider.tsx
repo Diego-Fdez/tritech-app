@@ -1,11 +1,11 @@
 import { useState, createContext, useContext, ReactNode, useMemo } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import { Toast } from 'toastify-react-native';
+import { useMutation } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useUserStore } from '@/store';
-import { API_URL } from '@/constants';
-import {
-  SugarCaneMillsResponse,
-  TemperatureTemplateResponseInterface,
-} from '../interfaces';
+import { API_URL, TemplateTypesEnum } from '@/constants';
+import { TemperatureTemplateResponseInterface } from '../interfaces';
 
 interface Client {
   id: string;
@@ -27,10 +27,8 @@ interface TemperatureTemplateContextType {
     component: string,
     isChecked: boolean
   ) => void;
-  handleSubmit: () => void;
   checkboxes: Record<string, boolean>;
-  handleCreateTemplate: () => void;
-  isLoading: boolean;
+  mutation: any;
 }
 
 interface TemperatureTemplateProviderProps {
@@ -50,7 +48,10 @@ const TemperatureTemplateProvider = ({
   const [millQuantity, setMillQuantity] = useState<number>(0);
   const [client, setClient] = useState<Client>({ id: '', clientName: '' });
   const [checkboxes, setCheckboxes] = useState<Record<string, boolean>>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const mutation = useMutation({
+    mutationFn: handleCreateTemplate,
+  });
 
   const TANDEM_ARRAY = useMemo(
     () => Array.from({ length: tandemQuantity }, (_, index) => index + 1),
@@ -86,30 +87,25 @@ const TemperatureTemplateProvider = ({
       clientId: client?.id,
       templateName: `Temperaturas bronces ${client?.clientName}`,
       createdBy: user?.id,
+      componentBody: createMillComponentBody(),
+      templateType: TemplateTypesEnum.TEMPERATURAS_BRONCES,
     };
 
-    try {
-      setIsLoading(true);
-      const { data }: AxiosResponse<TemperatureTemplateResponseInterface> =
-        await axios.post(`${API_URL}/templates`, templateBody, customHeader);
+    const { data }: AxiosResponse<TemperatureTemplateResponseInterface> =
+      await axios.post(`${API_URL}/templates`, templateBody, customHeader);
 
-      if (data?.statusCode !== 201) {
-        throw new Error(
-          'Lo sentimos, no pudimos crear tu formato, revisa que el cliente sea correcto'
-        );
-      }
-
-      await handleCreateMillComponent(data?.data?.id);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
+    if (data?.statusCode !== 201) {
+      throw new Error(
+        'Lo sentimos, no pudimos crear tu formato, revisa que el cliente sea correcto'
+      );
     }
+
+    Toast.success('Formato creado correctamente', 'bottom');
+    clearFields();
+    router.navigate('/(tabs)');
   }
 
-  async function handleCreateMillComponent(
-    templateId: string
-  ): Promise<SugarCaneMillsResponse | void> {
+  function createMillComponentBody() {
     const uniqueMills = new Set<string>();
 
     Object.keys(checkboxes).forEach((item) => {
@@ -123,50 +119,19 @@ const TemperatureTemplateProvider = ({
       return {
         tandemNumber: parseInt(tandem.split(' ')[1], 10),
         millName: mill.trim(),
-        templateId,
         componentName: component.trim(),
       };
     });
 
-    try {
-      const { data }: AxiosResponse<SugarCaneMillsResponse> = await axios.post(
-        `${API_URL}/mill-components`,
-        sugarCaneMillBodyArray,
-        customHeader
-      );
-
-      if (data?.statusCode !== 201) {
-        throw new Error(
-          'Lo sentimos, hay problemas para registrar los molinos, vuelve a intentarlo.'
-        );
-      }
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
+    return sugarCaneMillBodyArray;
   }
 
-  const handleSubmit = () => {
-    const uniqueMills = new Set<string>();
-
-    Object.keys(checkboxes).forEach((item) => {
-      const [tandem, mill, component] = item.split(', ').slice(0, 3);
-      uniqueMills.add(`${tandem}, ${mill}, ${component}`);
-    });
-
-    // Construir el array de objetos sugarCaneMillBody
-    const sugarCaneMillBodyArray = Array.from(uniqueMills).map((entry) => {
-      const [tandem, mill, component] = entry.split(', ');
-      return {
-        tandemCount: parseInt(tandem.split(' ')[1], 10),
-        millName: mill,
-        templateId: '1',
-        component,
-      };
-    });
-    console.log(sugarCaneMillBodyArray);
-  };
+  function clearFields() {
+    setTandemQuantity(0);
+    setMillQuantity(0);
+    setClient({ id: '', clientName: '' });
+    setCheckboxes({});
+  }
 
   const value = {
     tandemQuantity,
@@ -178,10 +143,8 @@ const TemperatureTemplateProvider = ({
     TANDEM_ARRAY,
     MILL_ARRAY,
     handleCheckboxChange,
-    handleSubmit,
     checkboxes,
-    handleCreateTemplate,
-    isLoading,
+    mutation,
   };
 
   return (

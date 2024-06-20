@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { styles } from './styles/TemperatureTemplate.styles';
 import {
@@ -22,10 +22,14 @@ const TemplateScreen = () => {
     setMillQuantity,
     client,
     setClient,
-    handleSubmit,
-    handleCreateTemplate,
-    isLoading,
+    mutation,
   } = useTemperatureTemplate();
+
+  if (mutation?.isError)
+    Alert.alert(
+      'Error',
+      'En este momento no podemos crear tu formato, intenta luego.'
+    );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,9 +89,9 @@ const TemplateScreen = () => {
                 <TemplateInformation />
                 <ThemedView style={styles.buttonContainer}>
                   <ThemedButton
-                    title={isLoading ? 'Cargando...' : 'Crear formato'}
-                    handlePress={handleCreateTemplate}
-                    disabled={isLoading}
+                    title={mutation.isPending ? 'Cargando...' : 'Crear formato'}
+                    handlePress={() => mutation.mutate()}
+                    disabled={mutation.isPending}
                   />
                 </ThemedView>
               </>

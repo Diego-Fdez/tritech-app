@@ -6,7 +6,6 @@ import { COMPONENTS } from './constants/componentsData';
 import { styles } from './styles/TemplateInformation.styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-import { randomIdGenerator } from '@/utils';
 import { useTemperatureTemplate } from '../../context/TemperatureTemplateProvider';
 
 const TemplateInformation = () => {
@@ -17,13 +16,13 @@ const TemplateInformation = () => {
   return (
     <>
       {TANDEM_ARRAY?.map((tandemIndex) => (
-        <ThemedView style={styles.container} key={randomIdGenerator()}>
+        <ThemedView style={styles.container} key={tandemIndex}>
           <ThemedText type='subtitle' style={styles.titles}>
             Tandem {tandemIndex}
           </ThemedText>
           <>
             {MILL_ARRAY?.map((millIndex) => (
-              <View key={randomIdGenerator()} style={styles.wrapper}>
+              <View key={millIndex} style={styles.wrapper}>
                 <ThemedText type='defaultSemiBold' style={styles.titles}>
                   Molino {millIndex}
                 </ThemedText>

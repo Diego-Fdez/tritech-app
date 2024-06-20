@@ -8,7 +8,3 @@ export interface TemperatureTemplateResponseInterface extends BaseInterface {
     id: string;
   };
 }
-
-export interface SugarCaneMillsResponse extends BaseInterface {
-  data: [{ id: string; millName: string }];
-}

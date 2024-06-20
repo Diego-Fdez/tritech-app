@@ -22,14 +22,14 @@ import {
   ClientsOptionsModal,
   NewClientModal,
 } from './components';
-import { useUserStore } from '@/store';
+import { useClientStore, useUserStore } from '@/store';
 import { ADMIN_USER } from '@/constants';
 
 const ClientsScreen = () => {
   const user = useUserStore((state) => state.user);
+  const clients = useClientStore((state) => state.clients);
   const colorScheme = useColorScheme();
   const {
-    clients,
     isPending,
     error,
     clientName,

@@ -7,6 +7,7 @@ export interface UserInterface {
   createdAt: string;
   updatedAt: string;
   country: string;
+  isActive: boolean;
 }
 
 export interface UserResponseInterface {
@@ -21,4 +22,5 @@ export interface UserUpdateInformation {
   password?: string;
   role?: string;
   country?: string;
+  isActive?: boolean;
 }

@@ -1,19 +1,9 @@
 import { create } from 'zustand';
-
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  country: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
+import { UserInterface } from '@/app/(tabs)/profile/interfaces';
 interface UserState {
-  user: User | null;
+  user: UserInterface | null;
   accessToken: string | null;
-  setUser: (user: User) => void;
+  setUser: (user: UserInterface) => void;
   setToken: (token: string) => void;
   clearUser: () => void;
 }
@@ -21,7 +11,7 @@ interface UserState {
 export const useUserStore = create<UserState>((set) => ({
   user: null,
   accessToken: null,
-  setUser: (user) => set({ user }),
-  setToken: (token) => set({ accessToken: token }),
+  setUser: (user: UserInterface) => set({ user }),
+  setToken: (token: string) => set({ accessToken: token }),
   clearUser: () => set({ user: null, accessToken: null }),
 }));

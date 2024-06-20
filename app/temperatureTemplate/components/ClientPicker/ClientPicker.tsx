@@ -35,7 +35,7 @@ const ClientPicker = ({ setClient }: ClientPickerPropsInterface) => {
               ]}
             >
               {selectedItem
-                ? 'Selecciona un cliente'
+                ? selectedItem?.clientName
                 : isPending
                 ? 'Cargando...'
                 : 'Selecciona un cliente'}
