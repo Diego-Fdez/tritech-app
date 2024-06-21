@@ -44,6 +44,7 @@ const ClientsScreen = () => {
     setClientsOptionsModal,
     onClientsOptionsModal,
     deleteMutation,
+    clientId,
   } = useClients();
 
   return (
@@ -118,6 +119,7 @@ const ClientsScreen = () => {
         setClientsOptionsModal={setClientsOptionsModal}
         deleteMutation={deleteMutation}
         clientName={clientName}
+        clientId={clientId}
       />
     </SafeAreaView>
   );

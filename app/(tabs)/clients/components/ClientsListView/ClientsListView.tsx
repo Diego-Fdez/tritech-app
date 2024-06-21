@@ -25,7 +25,9 @@ const ClientsListView = ({
               style={styles.clientButton}
               onPress={() => onClientsOptionsModal(item?.id, item?.clientName)}
             >
-              <ThemedText type='defaultSemiBold'>{item?.clientName}</ThemedText>
+              <ThemedText type='defaultSemiBold'>
+                {item?.clientName?.toUpperCase()}
+              </ThemedText>
             </TouchableOpacity>
           )}
           showsVerticalScrollIndicator={false}

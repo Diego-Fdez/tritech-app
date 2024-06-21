@@ -10,12 +10,12 @@ import {
 import { clientsAdapter } from '../adapters';
 import { API_URL } from '@/constants';
 import { useUserStore, useClientStore } from '@/store';
-import { customHeader } from '@/utils';
+import { useCustomHeader } from '@/hooks';
 
 const useClients = () => {
   const user = useUserStore((state) => state.user);
-  const clientsList = useClientStore((state) => state.clients);
   const setClients = useClientStore((state) => state.setClients);
+  const { customHeader } = useCustomHeader();
   const [clientName, setClientName] = useState<string>('');
   const [clientsModal, setClientsModal] = useState<boolean>(false);
   const [newClientModal, setNewClientModal] = useState<boolean>(false);
@@ -24,10 +24,10 @@ const useClients = () => {
   const [clientId, setClientId] = useState<string>('');
   const [clientsOptionsModal, setClientsOptionsModal] =
     useState<boolean>(false);
-  const { isPending, error } = useQuery({
+  const { isPending, error, data } = useQuery({
     queryKey: ['clients'],
     queryFn: getClients,
-    enabled: !clientsList,
+    initialData: [],
   });
 
   const {
@@ -51,7 +51,7 @@ const useClients = () => {
     try {
       const { data }: AxiosResponse<ClientsResponseInterface> = await axios(
         `${API_URL}/clients?userId=${user?.id}`,
-        customHeader()
+        customHeader
       );
 
       setClients(clientsAdapter(data?.data));
@@ -67,7 +67,7 @@ const useClients = () => {
 
     const { data }: AxiosResponse<ClientsResponseInterface> = await axios(
       `${API_URL}/clients/${clientName}?userId=${user?.id}`,
-      customHeader()
+      customHeader
     );
 
     return clientsAdapter(data?.data);
@@ -96,7 +96,7 @@ const useClients = () => {
           clientName: newClientName.toLocaleLowerCase().trim(),
           country,
         },
-        customHeader()
+        customHeader
       );
 
     setNewClientName('');
@@ -113,7 +113,7 @@ const useClients = () => {
 
   async function handleDeleteClient() {
     const { data }: AxiosResponse<ClientsResponseWithoutData> =
-      await axios.delete(`${API_URL}/clients/${clientId}`, customHeader());
+      await axios.delete(`${API_URL}/clients/${clientId}`, customHeader);
 
     if (data?.statusCode === 204) {
       setClientId('');
@@ -138,7 +138,7 @@ const useClients = () => {
     const { data } = await axios.patch(
       `${API_URL}/clients/${clientId}`,
       clientUpdateBody,
-      customHeader()
+      customHeader
     );
 
     if (data?.statusCode === 200) {
@@ -169,6 +169,7 @@ const useClients = () => {
     setClientsOptionsModal,
     onClientsOptionsModal,
     deleteMutation,
+    clientId,
   };
 };
 

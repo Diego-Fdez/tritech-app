@@ -1,4 +1,5 @@
 import { Modal, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { ThemedButton, ThemedText, ThemedView } from '@/components';
 import { styles } from './styles/ClientsOptionsModal.styles';
@@ -15,6 +16,7 @@ interface ClientsOptionsModalProps {
   setClientsOptionsModal: (value: boolean) => void;
   deleteMutation: UseMutationOptions;
   clientName: string;
+  clientId: string;
 }
 
 const ClientsOptionsModal = ({
@@ -22,6 +24,7 @@ const ClientsOptionsModal = ({
   setClientsOptionsModal,
   deleteMutation,
   clientName,
+  clientId,
 }: ClientsOptionsModalProps) => {
   const user = useUserStore((state) => state.user);
 
@@ -42,7 +45,7 @@ const ClientsOptionsModal = ({
         </TouchableOpacity>
         <ThemedView style={styles.buttonsContainer}>
           <ThemedText type='subtitle' style={styles.title}>
-            {clientName}
+            {clientName?.toUpperCase()}
           </ThemedText>
           {user?.role === ADMIN_USER && (
             <ThemedButton
@@ -53,6 +56,13 @@ const ClientsOptionsModal = ({
               disabled={deleteMutation?.isPending}
             />
           )}
+          <ThemedButton
+            title='Ir a los formatos'
+            handlePress={() => {
+              router.navigate(`/temperatureTemplate/clientId/${clientId}`);
+              () => setClientsOptionsModal(!clientsOptionsModal);
+            }}
+          />
         </ThemedView>
       </ThemedView>
     </Modal>

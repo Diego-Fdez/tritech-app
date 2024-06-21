@@ -19,8 +19,8 @@ const TemplateScreen = () => {
     tandemQuantity,
     setTandemQuantity,
     millQuantity,
-    setMillQuantity,
     client,
+    setMillQuantity,
     setClient,
     mutation,
   } = useTemperatureTemplate();

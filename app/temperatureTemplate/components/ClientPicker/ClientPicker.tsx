@@ -5,6 +5,7 @@ import { styles } from './styles/ClientPicker.styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useClients } from '@/app/(tabs)/clients/hooks';
+import { useClientStore } from '@/store';
 
 interface ClientPickerPropsInterface {
   setClient: (client: { id: string; clientName: string }) => void;
@@ -12,7 +13,8 @@ interface ClientPickerPropsInterface {
 
 const ClientPicker = ({ setClient }: ClientPickerPropsInterface) => {
   const colorScheme = useColorScheme();
-  const { clients, isPending } = useClients();
+  const clients = useClientStore((state) => state.clients);
+  const { isPending } = useClients();
 
   return (
     <SelectDropdown
