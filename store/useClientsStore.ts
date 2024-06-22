@@ -11,17 +11,27 @@ interface Client {
 }
 
 interface ClientState {
-  clients: Client[] | null;
+  clients: Client[];
   setClients: (clients: Client[]) => void;
   clearClients: () => void;
 }
 
+const EMPTY_CLIENTS: Client[] = [
+  {
+    id: '',
+    clientName: '',
+    country: '',
+    createdAt: '',
+    updatedAt: '',
+  },
+];
+
 export const useClientStore = create<ClientState>()(
   persist(
     (set) => ({
-      clients: null,
+      clients: EMPTY_CLIENTS,
       setClients: (clients: Client[]) => set({ clients }),
-      clearClients: () => set({ clients: null }),
+      clearClients: () => set({ clients: EMPTY_CLIENTS }),
     }),
     {
       name: 'clientsTritech',

@@ -1,20 +1,20 @@
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, Alert } from 'react-native';
+import { router } from 'expo-router';
 import { NoDataView, ThemedText } from '@/components';
-import { ClientsInterface } from '../../interfaces';
 import { styles } from '../../styles/ClientsScreen.styles';
+import { ClientsInterface } from '../../interfaces';
+import { useClients } from '../../hooks';
 
 interface ClientsListViewProps {
   clients: ClientsInterface[];
-  onClientsOptionsModal: (id: string, clientName: string) => void;
 }
 
-const ClientsListView = ({
-  clients,
-  onClientsOptionsModal,
-}: ClientsListViewProps) => {
+const ClientsListView = ({ clients }: ClientsListViewProps) => {
+  const { deleteMutation } = useClients();
+
   return (
     <>
-      {clients?.length > 0 ? (
+      {clients[0]?.id?.length > 0 ? (
         <FlatList
           horizontal={false}
           style={styles.dataContainer}
@@ -23,7 +23,25 @@ const ClientsListView = ({
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.clientButton}
-              onPress={() => onClientsOptionsModal(item?.id, item?.clientName)}
+              onPress={() =>
+                router.navigate(`/temperatureTemplate/clientId/${item?.id}`)
+              }
+              onLongPress={() => {
+                Alert.alert(
+                  'Eliminar cliente',
+                  '¿Estás seguro de que quieres eliminar este cliente?',
+                  [
+                    {
+                      text: 'Cancelar',
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Eliminar',
+                      onPress: () => deleteMutation.mutate(item?.id),
+                    },
+                  ]
+                );
+              }}
             >
               <ThemedText type='defaultSemiBold'>
                 {item?.clientName?.toUpperCase()}

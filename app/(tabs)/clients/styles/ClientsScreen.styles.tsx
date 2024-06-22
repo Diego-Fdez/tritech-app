@@ -16,13 +16,18 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  buttonsContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: normalize(20, 'height'),
+  },
   addButton: {
-    alignSelf: 'flex-end',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: normalize(6, 'width'),
-    marginBottom: normalize(20, 'height'),
   },
   inputContainer: {
     width: '100%',

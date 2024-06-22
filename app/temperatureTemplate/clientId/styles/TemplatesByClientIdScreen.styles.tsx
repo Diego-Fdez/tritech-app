@@ -55,11 +55,11 @@ export const styles = StyleSheet.create({
     shadowColor: '#0a7ea4',
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 6,
     },
-    shadowOpacity: 0.17,
-    shadowRadius: 3.05,
-    elevation: 4,
+    shadowOpacity: 0.21,
+    shadowRadius: 6.65,
+    elevation: 9,
     zIndex: -10,
   },
 });

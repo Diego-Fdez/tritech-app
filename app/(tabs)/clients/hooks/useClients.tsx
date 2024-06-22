@@ -15,21 +15,24 @@ import { useCustomHeader } from '@/hooks';
 const useClients = () => {
   const user = useUserStore((state) => state.user);
   const setClients = useClientStore((state) => state.setClients);
+  const clients = useClientStore((state) => state.clients);
   const { customHeader } = useCustomHeader();
   const [clientName, setClientName] = useState<string>('');
   const [clientsModal, setClientsModal] = useState<boolean>(false);
   const [newClientModal, setNewClientModal] = useState<boolean>(false);
   const [newClientName, setNewClientName] = useState<string>('');
   const [country, setCountry] = useState<string>('');
-  const [clientId, setClientId] = useState<string>('');
-  const [clientsOptionsModal, setClientsOptionsModal] =
-    useState<boolean>(false);
-  const { isPending, error, data } = useQuery({
+
+  // query function to get all clients
+  const { isPending, error } = useQuery({
     queryKey: ['clients'],
     queryFn: getClients,
     initialData: [],
+    refetchOnReconnect: true,
+    enabled: clients[0]?.id?.length === 0,
   });
 
+  // query function to get clients by name
   const {
     data: clientsByName,
     isPending: isLoading,
@@ -39,6 +42,7 @@ const useClients = () => {
     queryFn: getClientsByName,
   });
 
+  //query function to create a new client and save into store
   const mutation = useMutation({
     mutationFn: handleCreateClient,
   });
@@ -47,6 +51,10 @@ const useClients = () => {
     mutationFn: handleDeleteClient,
   });
 
+  /* function to get all clients from DB, and save into store
+  @customHeader (accessToken) 
+  @Params -> userId: string
+  */
   async function getClients(): Promise<ClientsInterface[] | void> {
     try {
       const { data }: AxiosResponse<ClientsResponseInterface> = await axios(
@@ -62,6 +70,8 @@ const useClients = () => {
     }
   }
 
+  //function to get clients by name from DB
+  //@customHeader (accessToken), @Params -> clientName: string; userId: string
   async function getClientsByName(): Promise<ClientsInterface[]> {
     if (clientName.length === 0) return [];
 
@@ -73,6 +83,7 @@ const useClients = () => {
     return clientsAdapter(data?.data);
   }
 
+  // if clientName > 0, change state of clientsModal
   function onSubmitEditing() {
     if (clientName?.length > 0) {
       setClientsModal(!clientsModal);
@@ -88,6 +99,8 @@ const useClients = () => {
     setNewClientModal(!newClientModal);
   }
 
+  //function to create a new client and save into DB
+  //@Body: clientName: string; country: string
   async function handleCreateClient() {
     const { data }: AxiosResponse<ClientsResponseWithoutData> =
       await axios.post(
@@ -105,47 +118,17 @@ const useClients = () => {
     return data;
   }
 
-  function onClientsOptionsModal(id: string, clientName: string) {
-    setClientId(id);
-    setClientName(clientName);
-    setClientsOptionsModal(!clientsOptionsModal);
-  }
-
-  async function handleDeleteClient() {
+  //function to delete a client by ID from DB.
+  async function handleDeleteClient(id: string) {
     const { data }: AxiosResponse<ClientsResponseWithoutData> =
-      await axios.delete(`${API_URL}/clients/${clientId}`, customHeader);
+      await axios.delete(`${API_URL}/clients/${id}`, customHeader);
 
     if (data?.statusCode === 204) {
-      setClientId('');
       Alert.alert('Éxito', 'Cliente eliminado correctamente');
-      setClientsOptionsModal(!clientsOptionsModal);
       setClientName('');
     }
 
     return data;
-  }
-
-  async function handleUpdateClient(
-    clientId: string,
-    clientName: string,
-    country: string
-  ) {
-    const clientUpdateBody = {
-      clientName: clientName.toLowerCase().trim(),
-      country,
-    };
-
-    const { data } = await axios.patch(
-      `${API_URL}/clients/${clientId}`,
-      clientUpdateBody,
-      customHeader
-    );
-
-    if (data?.statusCode === 200) {
-      Alert.alert('Éxito', 'Cliente actualizado correctamente');
-      setClientsOptionsModal(!clientsOptionsModal);
-      setClientName('');
-    }
   }
 
   return {
@@ -165,11 +148,8 @@ const useClients = () => {
     newClientName,
     setNewClientName,
     mutation,
-    clientsOptionsModal,
-    setClientsOptionsModal,
-    onClientsOptionsModal,
     deleteMutation,
-    clientId,
+    getClients,
   };
 };
 

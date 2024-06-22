@@ -5,20 +5,11 @@ import * as yup from 'yup';
 import { API_URL } from '@/constants';
 import { useUserStore } from '@/store';
 import { userInformationAdapter } from '@/app/(tabs)/profile/adapters';
+import { UserInterface } from '@/app/(tabs)/profile/interfaces';
 
 interface LoginDataInterface {
   accessToken: string;
-  user: {
-    id: string;
-    fullName: string;
-    email: string;
-    country: string;
-    phone: string;
-    role: string;
-    web: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  user: UserInterface;
 }
 
 interface DataInterface {

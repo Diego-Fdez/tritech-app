@@ -19,7 +19,6 @@ import { useClients } from './hooks';
 import {
   ClientsByNameModal,
   ClientsListView,
-  ClientsOptionsModal,
   NewClientModal,
 } from './components';
 import { useClientStore, useUserStore } from '@/store';
@@ -40,11 +39,7 @@ const ClientsScreen = () => {
     clientsByName,
     onNewClientModal,
     newClientModal,
-    clientsOptionsModal,
-    setClientsOptionsModal,
-    onClientsOptionsModal,
-    deleteMutation,
-    clientId,
+    getClients,
   } = useClients();
 
   return (
@@ -59,19 +54,27 @@ const ClientsScreen = () => {
         <ThemedView style={styles.wrapper}>
           {error && <ErrorView title={error.message} />}
           <>
-            {user?.role === ADMIN_USER && (
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={onNewClientModal}
-              >
-                <ThemedText type='defaultSemiBold'>Agregar cliente</ThemedText>
-                <Ionicons
-                  name='person-add'
-                  size={26}
-                  color={Colors.light.tint}
-                />
+            <ThemedView style={styles.buttonsContainer}>
+              <TouchableOpacity style={styles.addButton} onPress={getClients}>
+                <Ionicons name='refresh' size={26} color={Colors.light.tint} />
+                <ThemedText type='subtitle'>Actualizar</ThemedText>
               </TouchableOpacity>
-            )}
+              {user?.role === ADMIN_USER && (
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={onNewClientModal}
+                >
+                  <ThemedText type='defaultSemiBold'>
+                    Agregar cliente
+                  </ThemedText>
+                  <Ionicons
+                    name='person-add'
+                    size={26}
+                    color={Colors.light.tint}
+                  />
+                </TouchableOpacity>
+              )}
+            </ThemedView>
             <ThemedView style={styles.inputContainer}>
               <ThemedInput
                 placeholder='Buscar cliente'
@@ -96,10 +99,7 @@ const ClientsScreen = () => {
                 <ThemedText type='defaultSemiBold'>Cargando...</ThemedText>
               </ThemedView>
             ) : (
-              <ClientsListView
-                clients={clients || []}
-                onClientsOptionsModal={onClientsOptionsModal}
-              />
+              <ClientsListView clients={clients} />
             )}
           </>
         </ThemedView>
@@ -108,18 +108,10 @@ const ClientsScreen = () => {
         clientsModal={clientsModal}
         onCloseModal={onCloseModal}
         clientsByName={clientsByName || []}
-        onClientsOptionsModal={onClientsOptionsModal}
       />
       <NewClientModal
         onCloseModal={onNewClientModal}
         newClientModal={newClientModal}
-      />
-      <ClientsOptionsModal
-        clientsOptionsModal={clientsOptionsModal}
-        setClientsOptionsModal={setClientsOptionsModal}
-        deleteMutation={deleteMutation}
-        clientName={clientName}
-        clientId={clientId}
       />
     </SafeAreaView>
   );

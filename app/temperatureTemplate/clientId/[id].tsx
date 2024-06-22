@@ -5,10 +5,15 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { Colors, tintColorLight } from '@/constants';
-import { NavView, NoDataView, ThemedText, ThemedView } from '@/components';
+import {
+  ErrorView,
+  NavView,
+  NoDataView,
+  ThemedText,
+  ThemedView,
+} from '@/components';
 import { styles } from './styles/TemplatesByClientIdScreen.styles';
 import { useTemplateByClientId } from './hooks';
 
@@ -56,12 +61,11 @@ const TemplatesByClientIdScreen = () => {
                 </>
               ) : (
                 <>
-                  {isError &&
-                    Alert.alert(
-                      'Error',
-                      'Ocurrió un error al cargar los formatos.'
-                    )}
-                  <NoDataView title='Este cliente aún no tiene formatos creados.' />
+                  {isError ? (
+                    <ErrorView title='Ocurrió un problema cargando los formatos.' />
+                  ) : (
+                    <NoDataView title='Este cliente aún no tiene formatos creados.' />
+                  )}
                 </>
               )}
             </>
