@@ -130,7 +130,7 @@ const RegisterScreen = () => {
           />
           <ThemedView style={styles.linkContainer}>
             <ThemedText type='default'>¿Ya tienes cuenta?</ThemedText>
-            <Link href='/(tabs)/'>
+            <Link href='/'>
               <ThemedText type='link'>Inicia sesión</ThemedText>
             </Link>
           </ThemedView>

@@ -18,7 +18,7 @@ import { styles } from './styles/TemplatesByClientIdScreen.styles';
 import { useTemplateByClientId } from './hooks';
 
 const TemplatesByClientIdScreen = () => {
-  const { isError, data, isPending } = useTemplateByClientId();
+  const { isError, data, isPending, handleRedirect } = useTemplateByClientId();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +43,10 @@ const TemplatesByClientIdScreen = () => {
                     data={data}
                     keyExtractor={(item) => item?.id}
                     renderItem={({ item }) => (
-                      <TouchableOpacity style={styles.button}>
+                      <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => handleRedirect(item?.id)}
+                      >
                         <Image
                           source={require('@/assets/images/graphic.webp')}
                           style={styles.image}

@@ -51,30 +51,22 @@ const ClientsScreen = () => {
       />
       <ThemedView style={styles.container}>
         <NavView />
+        {user?.role === ADMIN_USER && (
+          <TouchableOpacity style={styles.addButton} onPress={onNewClientModal}>
+            <Ionicons
+              name='add-circle-sharp'
+              size={60}
+              color={Colors.light.tint}
+            />
+          </TouchableOpacity>
+        )}
         <ThemedView style={styles.wrapper}>
           {error && <ErrorView title={error.message} />}
           <>
-            <ThemedView style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={getClients}>
-                <Ionicons name='refresh' size={26} color={Colors.light.tint} />
-                <ThemedText type='subtitle'>Actualizar</ThemedText>
-              </TouchableOpacity>
-              {user?.role === ADMIN_USER && (
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={onNewClientModal}
-                >
-                  <ThemedText type='defaultSemiBold'>
-                    Agregar cliente
-                  </ThemedText>
-                  <Ionicons
-                    name='person-add'
-                    size={26}
-                    color={Colors.light.tint}
-                  />
-                </TouchableOpacity>
-              )}
-            </ThemedView>
+            <TouchableOpacity style={styles.refreshButton} onPress={getClients}>
+              <Ionicons name='refresh' size={26} color={Colors.light.tint} />
+              <ThemedText type='subtitle'>Actualizar clientes</ThemedText>
+            </TouchableOpacity>
             <ThemedView style={styles.inputContainer}>
               <ThemedInput
                 placeholder='Buscar cliente'

@@ -4,6 +4,7 @@ import { tintColorLight } from '@/constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     flex: 1,
     width: '100%',
     alignItems: 'flex-start',
@@ -16,18 +17,22 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
-  buttonsContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: normalize(20, 'height'),
-  },
-  addButton: {
+  refreshButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: normalize(6, 'width'),
+    alignSelf: 'flex-start',
+    marginBottom: normalize(20, 'height'),
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: normalize(40, 'height'),
+    right: normalize(20, 'width'),
+    width: 'auto',
+    height: 'auto',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   inputContainer: {
     width: '100%',
