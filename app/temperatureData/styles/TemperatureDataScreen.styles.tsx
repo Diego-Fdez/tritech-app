@@ -20,6 +20,8 @@ export const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
+    width: '100%',
+    backgroundColor: 'transparent',
     gap: normalize(20, 'height'),
     alignItems: 'center',
     justifyContent: 'flex-start',

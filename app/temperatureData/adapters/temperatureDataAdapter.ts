@@ -20,6 +20,7 @@ export const templateTemperatureDataAdapter = (
           millName: millComponent?.millName,
           componentName: millComponent?.componentName,
           tandemNumber: millComponent?.tandemNumber,
+          temperature: millComponent.temperature ?? 0,
         };
       }
     ),

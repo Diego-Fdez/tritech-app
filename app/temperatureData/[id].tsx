@@ -3,8 +3,10 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  View,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import Animated from 'react-native-reanimated';
 import {
   NavView,
   ThemedButton,
@@ -16,11 +18,20 @@ import { Colors } from '@/constants';
 import { styles } from './styles/TemperatureDataScreen.styles';
 import { useTemperatureData } from './hooks';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTemperatureDataStore } from '@/store';
 
 const TemperatureDataScreen = () => {
   const schemeColor = useColorScheme();
-  const { isPending, handleNavigation, currentComponent } =
-    useTemperatureData();
+  const currentComponent = useTemperatureDataStore(
+    (state) => state.currentComponent
+  );
+  const {
+    isPending,
+    handleNavigation,
+    animatedStyle,
+    temperature,
+    setTemperature,
+  } = useTemperatureData();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,34 +51,51 @@ const TemperatureDataScreen = () => {
               <ActivityIndicator size='large' color={Colors.light.tint} />
             ) : (
               <>
-                <ThemedView style={styles.inputContainer}>
-                  <ThemedText type='title'>
-                    {currentComponent?.millName}
-                  </ThemedText>
-                  <ThemedText type='subtitle'>
-                    {currentComponent?.componentName}
-                  </ThemedText>
-                  <ThemedInput
-                    placeholder='0.00'
-                    keyboardType='numeric'
-                    placeholderTextColor={
-                      Colors[schemeColor ?? 'light'].tabIconDefault
-                    }
-                    autoFocus={true}
-                  />
-                </ThemedView>
-                <ThemedView style={styles.buttonsContainer}>
-                  <ThemedButton
-                    title='Anterior'
-                    style={styles.button}
-                    handlePress={() => handleNavigation('prev')}
-                  />
-                  <ThemedButton
-                    title='Siguiente'
-                    style={styles.button}
-                    handlePress={() => handleNavigation('next')}
-                  />
-                </ThemedView>
+                {currentComponent?.id?.length > 0 && (
+                  <>
+                    <Animated.View
+                      style={[animatedStyle, styles.inputContainer]}
+                    >
+                      <ThemedText type='title'>
+                        {currentComponent?.millName}
+                      </ThemedText>
+                      <ThemedText type='subtitle'>
+                        {currentComponent?.componentName}
+                      </ThemedText>
+                      <ThemedInput
+                        placeholder='0.00'
+                        keyboardType='phone-pad'
+                        placeholderTextColor={
+                          Colors[schemeColor ?? 'light'].tabIconDefault
+                        }
+                        autoFocus={true}
+                        value={temperature}
+                        onChangeText={(text) => {
+                          setTemperature(text);
+                          currentComponent.temperature = Number(text);
+                        }}
+                      />
+                    </Animated.View>
+                    <ThemedView style={styles.buttonsContainer}>
+                      <ThemedButton
+                        title='Anterior'
+                        style={styles.button}
+                        handlePress={() => handleNavigation('prev')}
+                      />
+                      <ThemedButton
+                        title='Siguiente'
+                        style={styles.button}
+                        handlePress={() =>
+                          handleNavigation(
+                            'next',
+                            currentComponent?.id,
+                            temperature
+                          )
+                        }
+                      />
+                    </ThemedView>
+                  </>
+                )}
               </>
             )}
           </ThemedView>

@@ -8,6 +8,7 @@ export interface MillComponentInterface {
   millName: string;
   componentName: string;
   tandemNumber: number;
+  temperature: number;
 }
 
 export interface TemperatureDataInterface {
@@ -27,3 +28,27 @@ export interface TemperatureDataInterface {
 export interface TemplateDataResponseInterface extends BaseInterface {
   data: TemperatureDataInterface;
 }
+
+export interface TemperaturesDataInterface {
+  millComponentId: string;
+  temperature: number;
+}
+
+export const EMPTY_DATA = {
+  id: '',
+  clientId: '',
+  templateName: '',
+  createdBy: '',
+  client: '',
+  clientName: '',
+  author: '',
+  millComponents: [
+    {
+      id: '',
+      millName: '',
+      componentName: '',
+      tandemNumber: 0,
+      temperature: 0,
+    },
+  ],
+};
