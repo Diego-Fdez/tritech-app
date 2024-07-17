@@ -52,3 +52,11 @@ export const EMPTY_DATA = {
     },
   ],
 };
+
+export interface SuccessMutationResponse {
+  data: {
+    id: string;
+    message: string;
+    statusCode: number;
+  };
+}

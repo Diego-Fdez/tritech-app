@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import axios, { AxiosResponse } from 'axios';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import {
@@ -10,7 +11,11 @@ import {
 } from 'react-native-reanimated';
 import { API_URL } from '@/constants';
 import { useCustomHeader } from '@/hooks';
-import { EMPTY_DATA, TemplateDataResponseInterface } from '../interfaces';
+import {
+  EMPTY_DATA,
+  SuccessMutationResponse,
+  TemplateDataResponseInterface,
+} from '../interfaces';
 import { templateTemperatureDataAdapter } from '../adapters';
 import { useTemperatureDataStore } from '@/store';
 
@@ -56,7 +61,7 @@ const useTemperatureData = () => {
       });
       setTemperature(currentTemperature.toString());
     }
-  }, [data, currentIndex, temperaturesData]);
+  }, [data, currentIndex, temperaturesData, setCurrentComponent]);
 
   //function to get template by id from DB
   async function getTemplateById() {
@@ -93,19 +98,39 @@ const useTemperatureData = () => {
       setTemperature(prevTemperature.toString());
     } else if (
       direction === 'next' &&
-      currentIndex < data.millComponents.length - 1
+      currentIndex <= data.millComponents.length - 1
     ) {
-      updateTemperatureData(componentId || '', Number(temperatureData));
-      setCurrentIndex(currentIndex + 1);
-      const nextComponent = data.millComponents[currentIndex + 1];
-      const nextTemperature =
-        temperaturesData.find((t) => t.millComponentId === nextComponent.id)
-          ?.temperature || 0;
-      setCurrentComponent({
-        ...nextComponent,
-        temperature: nextTemperature,
-      });
-      setTemperature(nextTemperature.toString());
+      if (currentIndex < data.millComponents.length - 1) {
+        updateTemperatureData(componentId || '', Number(temperatureData));
+        setCurrentIndex(currentIndex + 1);
+        const nextComponent = data?.millComponents[currentIndex + 1];
+        const nextTemperature =
+          temperaturesData.find((t) => t?.millComponentId === nextComponent?.id)
+            ?.temperature || 0;
+        setCurrentComponent({
+          ...nextComponent,
+          temperature: nextTemperature,
+        });
+        setTemperature(nextTemperature.toString());
+      }
+
+      if (currentIndex === data.millComponents.length - 1) {
+        updateTemperatureData(componentId || '', Number(temperatureData));
+        Alert.alert(
+          'Guardar Temperaturas',
+          '¿Desea guardar las temperaturas?',
+          [
+            {
+              text: 'Cancelar',
+              style: 'cancel',
+            },
+            {
+              text: 'Guardar',
+              onPress: () => mutation.mutate(),
+            },
+          ]
+        );
+      }
     }
 
     shake();
@@ -177,8 +202,31 @@ const useTemperatureData = () => {
     return unsubscribe;
   }, [navigation]);
 
+  async function handleSaveTemperatures() {
+    const temperatureData = temperaturesData?.map((data) => ({
+      millComponentId: data?.millComponentId,
+      temperature: data?.temperature,
+      date: new Date(),
+    }));
+
+    const { data }: SuccessMutationResponse = await axios.post(
+      `${API_URL}/temperature-data`,
+      temperatureData,
+      customHeader
+    );
+
+    if (data.statusCode === 201) {
+      Alert.alert('Success', 'Se han guardado las temperaturas!');
+      setTemperaturesData([]);
+      setCurrentIndex(0);
+    }
+  }
+
+  const mutation = useMutation({
+    mutationFn: handleSaveTemperatures,
+  });
+
   return {
-    data,
     isError,
     isPending,
     handleNavigation,

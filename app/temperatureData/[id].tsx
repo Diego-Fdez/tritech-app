@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  View,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Animated from 'react-native-reanimated';
@@ -28,9 +27,9 @@ const TemperatureDataScreen = () => {
   const {
     isPending,
     handleNavigation,
-    animatedStyle,
     temperature,
     setTemperature,
+    animatedStyle,
   } = useTemperatureData();
 
   return (
