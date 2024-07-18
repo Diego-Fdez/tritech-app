@@ -83,13 +83,13 @@ const useTemperatureData = () => {
   ) => {
     if (direction === 'prev' && currentIndex > 0) {
       updateTemperatureData(
-        data.millComponents[currentIndex].id,
+        data?.millComponents[currentIndex]?.id,
         Number(temperature)
       );
       setCurrentIndex(currentIndex - 1);
-      const prevComponent = data.millComponents[currentIndex - 1];
+      const prevComponent = data?.millComponents[currentIndex - 1];
       const prevTemperature =
-        temperaturesData.find((t) => t.millComponentId === prevComponent.id)
+        temperaturesData.find((t) => t?.millComponentId === prevComponent?.id)
           ?.temperature || 0;
       setCurrentComponent({
         ...prevComponent,
@@ -98,9 +98,9 @@ const useTemperatureData = () => {
       setTemperature(prevTemperature.toString());
     } else if (
       direction === 'next' &&
-      currentIndex <= data.millComponents.length - 1
+      currentIndex <= data?.millComponents.length - 1
     ) {
-      if (currentIndex < data.millComponents.length - 1) {
+      if (currentIndex < data?.millComponents.length - 1) {
         updateTemperatureData(componentId || '', Number(temperatureData));
         setCurrentIndex(currentIndex + 1);
         const nextComponent = data?.millComponents[currentIndex + 1];
@@ -114,7 +114,7 @@ const useTemperatureData = () => {
         setTemperature(nextTemperature.toString());
       }
 
-      if (currentIndex === data.millComponents.length - 1) {
+      if (currentIndex === data?.millComponents.length - 1) {
         updateTemperatureData(componentId || '', Number(temperatureData));
         Alert.alert(
           'Guardar Temperaturas',

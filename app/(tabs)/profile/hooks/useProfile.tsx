@@ -1,11 +1,12 @@
 import * as yup from 'yup';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import { useState } from 'react';
-import { Toast } from 'toastify-react-native';
+import { Alert } from 'react-native';
 import { UserResponseInterface, UserUpdateInformation } from '../interfaces';
 import { API_URL } from '@/constants';
 import { useUserStore } from '@/store';
 import { userInformationAdapter } from '../adapters';
+import { ErrorResponse, handleErrors } from '@/utils';
 
 const useProfile = () => {
   const accessToken = useUserStore((state) => state.accessToken);
@@ -51,15 +52,14 @@ const useProfile = () => {
           },
         }
       );
+
       setUser(userInformationAdapter(data?.data));
       setIsEnabled((previousState) => !previousState);
-      Toast.success('Tú información se actualizó correctamente');
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
+      Alert.alert('Éxito', 'Tú información se actualizó correctamente');
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
     } finally {
       setIsLoading(false);
     }

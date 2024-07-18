@@ -61,39 +61,45 @@ const ClientsScreen = () => {
           </TouchableOpacity>
         )}
         <ThemedView style={styles.wrapper}>
-          {error && <ErrorView title={error.message} />}
-          <>
-            <TouchableOpacity style={styles.refreshButton} onPress={getClients}>
-              <Ionicons name='refresh' size={26} color={Colors.light.tint} />
-              <ThemedText type='subtitle'>Actualizar clientes</ThemedText>
-            </TouchableOpacity>
-            <ThemedView style={styles.inputContainer}>
-              <ThemedInput
-                placeholder='Buscar cliente'
-                showIcon={true}
-                placeholderTextColor={
-                  Colors[colorScheme ?? 'light'].tabIconDefault
-                }
-                value={clientName}
-                onChangeText={setClientName}
-                onSubmitEditing={onSubmitEditing}
-              />
-              <Ionicons
-                name='search'
-                size={24}
-                color={Colors[colorScheme ?? 'light'].text}
-                style={styles.icon}
-              />
-            </ThemedView>
-            {isPending ? (
-              <ThemedView style={styles.loadingContainer}>
-                <ActivityIndicator size='large' color={Colors.light.tint} />
-                <ThemedText type='defaultSemiBold'>Cargando...</ThemedText>
+          {error ? (
+            <ErrorView title={error?.message} />
+          ) : (
+            <>
+              <TouchableOpacity
+                style={styles.refreshButton}
+                onPress={getClients}
+              >
+                <Ionicons name='refresh' size={26} color={Colors.light.tint} />
+                <ThemedText type='subtitle'>Actualizar clientes</ThemedText>
+              </TouchableOpacity>
+              <ThemedView style={styles.inputContainer}>
+                <ThemedInput
+                  placeholder='Buscar cliente'
+                  showIcon={true}
+                  placeholderTextColor={
+                    Colors[colorScheme ?? 'light'].tabIconDefault
+                  }
+                  value={clientName}
+                  onChangeText={setClientName}
+                  onSubmitEditing={onSubmitEditing}
+                />
+                <Ionicons
+                  name='search'
+                  size={24}
+                  color={Colors[colorScheme ?? 'light'].text}
+                  style={styles.icon}
+                />
               </ThemedView>
-            ) : (
-              <ClientsListView clients={clients} />
-            )}
-          </>
+              {isPending ? (
+                <ThemedView style={styles.loadingContainer}>
+                  <ActivityIndicator size='large' color={Colors.light.tint} />
+                  <ThemedText type='defaultSemiBold'>Cargando...</ThemedText>
+                </ThemedView>
+              ) : (
+                <ClientsListView clients={clients} />
+              )}
+            </>
+          )}
         </ThemedView>
       </ThemedView>
       <ClientsByNameModal

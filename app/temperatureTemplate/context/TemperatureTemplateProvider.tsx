@@ -1,11 +1,13 @@
 import { useState, createContext, useContext, ReactNode, useMemo } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { Toast } from 'toastify-react-native';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { Alert } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useUserStore } from '@/store';
 import { API_URL, TemplateTypesEnum } from '@/constants';
 import { TemperatureTemplateResponseInterface } from '../interfaces';
+import { ErrorResponse, handleErrors } from '@/utils';
+import { useCustomHeader } from '@/hooks';
 
 interface Client {
   id: string;
@@ -42,8 +44,8 @@ const TemperatureTemplateContext = createContext<
 const TemperatureTemplateProvider = ({
   children,
 }: TemperatureTemplateProviderProps) => {
+  const { customHeader } = useCustomHeader();
   const user = useUserStore((state) => state.user);
-  const accessToken = useUserStore((state) => state.accessToken);
   const [tandemQuantity, setTandemQuantity] = useState<number>(0);
   const [millQuantity, setMillQuantity] = useState<number>(0);
   const [client, setClient] = useState<Client>({ id: '', clientName: '' });
@@ -75,13 +77,6 @@ const TemperatureTemplateProvider = ({
     }));
   };
 
-  const customHeader = {
-    headers: {
-      bearer: accessToken,
-    },
-    'Content-Type': 'application/json',
-  };
-
   async function handleCreateTemplate() {
     const templateBody = {
       clientId: client?.id,
@@ -91,18 +86,20 @@ const TemperatureTemplateProvider = ({
       templateType: TemplateTypesEnum.TEMPERATURAS_BRONCES,
     };
 
-    const { data }: AxiosResponse<TemperatureTemplateResponseInterface> =
-      await axios.post(`${API_URL}/templates`, templateBody, customHeader);
+    try {
+      const { data }: AxiosResponse<TemperatureTemplateResponseInterface> =
+        await axios.post(`${API_URL}/templates`, templateBody, customHeader);
 
-    if (data?.statusCode !== 201) {
-      throw new Error(
-        'Lo sentimos, no pudimos crear tu formato, revisa que el cliente sea correcto'
-      );
+      Alert.alert('Éxito', 'Formato creado correctamente');
+      clearFields();
+      router.navigate('/(tabs)');
+
+      return data;
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
     }
-
-    Toast.success('Formato creado correctamente', 'bottom');
-    clearFields();
-    router.navigate('/(tabs)');
   }
 
   function createMillComponentBody() {

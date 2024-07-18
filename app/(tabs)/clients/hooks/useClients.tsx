@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import {
   ClientsInterface,
   ClientsResponseInterface,
@@ -11,6 +11,7 @@ import { clientsAdapter } from '../adapters';
 import { API_URL } from '@/constants';
 import { useUserStore, useClientStore } from '@/store';
 import { useCustomHeader } from '@/hooks';
+import { ErrorResponse, handleErrors } from '@/utils';
 
 const useClients = () => {
   const user = useUserStore((state) => state.user);
@@ -65,22 +66,30 @@ const useClients = () => {
       setClients(clientsAdapter(data?.data));
 
       return clientsAdapter(data?.data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
     }
   }
 
   //function to get clients by name from DB
   //@customHeader (accessToken), @Params -> clientName: string; userId: string
-  async function getClientsByName(): Promise<ClientsInterface[]> {
+  async function getClientsByName(): Promise<ClientsInterface[] | any> {
     if (clientName.length === 0) return [];
 
-    const { data }: AxiosResponse<ClientsResponseInterface> = await axios(
-      `${API_URL}/clients/${clientName}?userId=${user?.id}`,
-      customHeader
-    );
+    try {
+      const { data }: AxiosResponse<ClientsResponseInterface> = await axios(
+        `${API_URL}/clients/${clientName}?userId=${user?.id}`,
+        customHeader
+      );
 
-    return clientsAdapter(data?.data);
+      return clientsAdapter(data?.data);
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
+    }
   }
 
   // if clientName > 0, change state of clientsModal
@@ -102,33 +111,45 @@ const useClients = () => {
   //function to create a new client and save into DB
   //@Body: clientName: string; country: string
   async function handleCreateClient() {
-    const { data }: AxiosResponse<ClientsResponseWithoutData> =
-      await axios.post(
-        `${API_URL}/clients`,
-        {
-          clientName: newClientName.toLocaleLowerCase().trim(),
-          country,
-        },
-        customHeader
-      );
+    try {
+      const { data }: AxiosResponse<ClientsResponseWithoutData> =
+        await axios.post(
+          `${API_URL}/clients`,
+          {
+            clientName: newClientName.toLocaleLowerCase().trim(),
+            country,
+          },
+          customHeader
+        );
 
-    setNewClientName('');
-    Alert.alert('Éxito', 'Cliente creado correctamente');
+      setNewClientName('');
+      Alert.alert('Éxito', 'Cliente creado correctamente');
 
-    return data;
+      return data;
+    } catch (error) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
+    }
   }
 
   //function to delete a client by ID from DB.
   async function handleDeleteClient(id: string) {
-    const { data }: AxiosResponse<ClientsResponseWithoutData> =
-      await axios.delete(`${API_URL}/clients/${id}`, customHeader);
+    try {
+      const { data }: AxiosResponse<ClientsResponseWithoutData> =
+        await axios.delete(`${API_URL}/clients/${id}`, customHeader);
 
-    if (data?.statusCode === 204) {
-      Alert.alert('Éxito', 'Cliente eliminado correctamente');
-      setClientName('');
+      if (data?.statusCode === 204) {
+        Alert.alert('Éxito', 'Cliente eliminado correctamente');
+        setClientName('');
+      }
+
+      return data;
+    } catch (error) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
     }
-
-    return data;
   }
 
   return {

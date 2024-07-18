@@ -1,4 +1,4 @@
-import { Modal, TouchableOpacity, Image, Alert } from 'react-native';
+import { Modal, TouchableOpacity, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import {
   CountriesView,
@@ -24,10 +24,6 @@ const NewClientModal = ({
   const colorScheme = useColorScheme();
   const { setCountry, newClientName, setNewClientName, mutation } =
     useClients();
-
-  if (mutation.isError) {
-    Alert.alert('Error', mutation?.error?.message);
-  }
 
   return (
     <Modal

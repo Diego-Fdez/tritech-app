@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import { Alert } from 'react-native';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import { router } from 'expo-router';
 import * as yup from 'yup';
 import { API_URL } from '@/constants';
 import { useUserStore } from '@/store';
 import { userInformationAdapter } from '@/app/(tabs)/profile/adapters';
 import { UserInterface } from '@/app/(tabs)/profile/interfaces';
+import { ErrorResponse, handleErrors } from '@/utils';
 
 interface LoginDataInterface {
   accessToken: string;
@@ -52,12 +54,9 @@ const useLogin = () => {
       setUser(userInformationAdapter(data?.user));
       setToken(data?.accessToken);
       router.navigate('/(tabs)');
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
     } finally {
       setIsLoading(false);
     }

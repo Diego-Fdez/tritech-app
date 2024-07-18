@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { router } from 'expo-router';
 import * as yup from 'yup';
-import { Toast } from 'toastify-react-native';
+import { Alert } from 'react-native';
 import { API_URL } from '@/constants';
+import { ErrorResponse, handleErrors } from '@/utils';
 
 interface DataInterface {
   email: string;
@@ -27,15 +28,13 @@ const useRegister = () => {
         country,
       });
 
-      Toast.success(`Bienvenido ${fullName.split(' ')[0]}`);
+      Alert.alert('Éxito', `Bienvenido ${fullName.split(' ')[0]}`);
 
       router.navigate('/');
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, errorResult?.errorMessage);
     } finally {
       setIsLoading(false);
     }
