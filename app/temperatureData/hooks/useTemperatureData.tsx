@@ -2,7 +2,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import axios, { AxiosResponse } from 'axios';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams, useNavigation, router } from 'expo-router';
 import {
   Easing,
   useSharedValue,
@@ -126,7 +126,10 @@ const useTemperatureData = () => {
             },
             {
               text: 'Guardar',
-              onPress: () => mutation.mutate(),
+              onPress: () => {
+                mutation.mutate();
+                router.navigate(`/temperatureDataReportScreen/${id}`);
+              },
             },
           ]
         );

@@ -14,9 +14,8 @@ export const BUTTONS_DATA: ButtonsDataInterface[] = [
     image: require('@/assets/images/checklist.webp'),
     title: 'Checklist',
     fn: () =>
-      Alert.alert(
-        'Información',
-        'Te avisaremos cuando este disponible esta opción'
+      router.navigate(
+        `/temperatureDataReportScreen/c000ff9b-34b1-49d6-b37e-28bdcb09b1e4`
       ),
   },
   {

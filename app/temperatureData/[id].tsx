@@ -58,6 +58,9 @@ const TemperatureDataScreen = () => {
                       <ThemedText type='title'>
                         {currentComponent?.millName}
                       </ThemedText>
+                      <ThemedText type='default'>
+                        Tandem: {currentComponent?.tandemNumber}
+                      </ThemedText>
                       <ThemedText type='subtitle'>
                         {currentComponent?.componentName}
                       </ThemedText>

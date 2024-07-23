@@ -126,7 +126,7 @@ const useClients = () => {
       Alert.alert('Éxito', 'Cliente creado correctamente');
 
       return data;
-    } catch (error) {
+    } catch (error: AxiosError | any) {
       const errorResult: ErrorResponse = handleErrors(error);
 
       Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
@@ -145,7 +145,7 @@ const useClients = () => {
       }
 
       return data;
-    } catch (error) {
+    } catch (error: AxiosError | any) {
       const errorResult: ErrorResponse = handleErrors(error);
 
       Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
