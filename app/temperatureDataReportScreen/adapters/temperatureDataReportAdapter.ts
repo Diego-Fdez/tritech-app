@@ -2,7 +2,7 @@ import { TemperaturesDataInterface } from '../interfaces';
 
 export function latestTemperaturesDataAdapter(
   temperatures: TemperaturesDataInterface[]
-) {
+): TemperaturesDataInterface[] {
   return temperatures?.map((temperature: TemperaturesDataInterface) => {
     return {
       id: temperature?.id,
