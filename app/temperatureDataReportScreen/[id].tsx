@@ -1,13 +1,14 @@
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '@/constants';
-import { NavView, ThemedText, ThemedView } from '@/components';
+import { LoaderView, NavView, ThemedText, ThemedView } from '@/components';
 import { styles } from './styles/TemperatureDataReportScreen.styles';
 import { useTemperatureDataReportScreen } from './hooks';
+import { ChartsView, GearsChartsView, Tandem2ChartsView } from './components';
 
 const TemperatureDataReportView = () => {
-  const { data, isPending } = useTemperatureDataReportScreen();
-  console.log(isPending);
+  const { isPending } = useTemperatureDataReportScreen();
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -18,7 +19,25 @@ const TemperatureDataReportView = () => {
       <ThemedView style={styles.container}>
         <NavView />
         <ThemedView style={styles.wrapper}>
-          <ThemedText>Temperaturas</ThemedText>
+          {isPending ? (
+            <LoaderView />
+          ) : (
+            <ScrollView
+              style={styles.scrollContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <ThemedText type='defaultSemiBold' style={styles.description}>
+                Este reporte presenta los datos de las temperaturas registradas
+                en los bronces de los molinos. La información se ha recopilado
+                con el objetivo de monitorear el estado de los componentes y
+                detectar posibles anomalías que puedan afectar el funcionamiento
+                de los molinos.
+              </ThemedText>
+              <ChartsView />
+              <Tandem2ChartsView />
+              <GearsChartsView />
+            </ScrollView>
+          )}
         </ThemedView>
       </ThemedView>
     </SafeAreaView>

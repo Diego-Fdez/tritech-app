@@ -11,7 +11,17 @@ export const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     width: '100%',
-    marginTop: '23%',
+    marginTop: '20%',
     paddingHorizontal: normalize(20, 'width'),
+  },
+  scrollContainer: {
+    flex: 1,
+    width: '100%',
+  },
+  description: {
+    textAlign: 'justify',
+    marginBottom: normalize(14, 'height'),
+    width: '90%',
+    alignSelf: 'center',
   },
 });

@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { Alert } from 'react-native';
+import { Alert, Dimensions } from 'react-native';
 import { useCustomHeader } from '@/hooks';
 import { ErrorResponse, handleErrors } from '@/utils';
 import { API_URL } from '@/constants';
@@ -13,21 +13,22 @@ import {
   groupComponentsByCriteria,
   latestTemperaturesDataAdapter,
 } from '../adapters';
+import { MockTemperaturesData } from '../mockData';
 
 const useTemperatureDataReportScreen = () => {
   const { id } = useLocalSearchParams();
   const { customHeader } = useCustomHeader();
+  const { width } = Dimensions.get('window');
 
   // fetch data from DB
-  const { data, isPending } = useQuery({
+  const { data, isPending, error } = useQuery({
     queryKey: ['temperatureDataReport'],
     queryFn: getTemperaturesByDateAndTemplateId,
     enabled: !!id,
+    initialData: MockTemperaturesData,
   });
 
-  async function getTemperaturesByDateAndTemplateId(): Promise<
-    TemperaturesDataResponse | undefined
-  > {
+  async function getTemperaturesByDateAndTemplateId() {
     const now: Date = new Date();
 
     try {
@@ -40,8 +41,8 @@ const useTemperatureDataReportScreen = () => {
         latestTemperaturesDataAdapter(data?.data);
 
       const groupedComponents = groupComponentsByCriteria(adaptedData);
-      console.log(groupedComponents);
-      return data;
+
+      return groupedComponents;
     } catch (error: AxiosError | any) {
       const errorResult: ErrorResponse = handleErrors(error);
 
@@ -49,7 +50,17 @@ const useTemperatureDataReportScreen = () => {
     }
   }
 
-  return { data, isPending };
+  const chartProps = {
+    width: width,
+    height: 220,
+    xAxisLabelTextStyle: {
+      fontSize: 10,
+      height: 60,
+    },
+    barWidth: 20,
+  };
+
+  return { data, isPending, error, chartProps };
 };
 
 export default useTemperatureDataReportScreen;
