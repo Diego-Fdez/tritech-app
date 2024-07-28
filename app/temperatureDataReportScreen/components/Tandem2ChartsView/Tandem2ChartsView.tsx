@@ -1,6 +1,6 @@
 import { BarChart } from 'react-native-gifted-charts';
 import ViewShot from 'react-native-view-shot';
-import { ThemedText, ThemedView } from '@/components';
+import { ThemedText } from '@/components';
 import { useSnapShoot, useTemperatureDataReportScreen } from '../../hooks';
 import { styles } from '../ChartsView/styles/ChartsView.styles';
 import { ABBREVIATE_NAME, GENERATE_COLOR } from '../../utils';

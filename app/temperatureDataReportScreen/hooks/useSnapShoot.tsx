@@ -2,16 +2,16 @@ import { useRef, useEffect, useState } from 'react';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import { captureRef } from 'react-native-view-shot';
-import * as MailComposer from 'expo-mail-composer';
-import { Alert } from 'react-native';
-import { router } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { useSnapShotStore } from '@/store';
 import useTemperatureDataReportScreen from './useTemperatureDataReportScreen';
-import { handleFormatDate } from '@/utils';
-import { htmlReportBody } from '../utils';
+import { htmlEmailBody, htmlReportBody } from '../utils';
+import { useSendEmail } from '@/hooks';
+import { randomIdGenerator } from '@/utils';
 
 const useSnapShoot = () => {
   const { clientName } = useTemperatureDataReportScreen();
+  const navigation = useNavigation();
   const gearTandem1SnapShootRef = useRef(null);
   const gearTandem2SnapShootRef = useRef(null);
   const mill1Tandem1SnapShootRef = useRef(null);
@@ -27,11 +27,13 @@ const useSnapShoot = () => {
   const mill5Tandem2SnapShootRef = useRef(null);
   const mill6Tandem2SnapShootRef = useRef(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [refIsReady, setRefIsReady] = useState<boolean>(false);
   const setSnapShoot = useSnapShotStore((state) => state.setSnapshot);
   const snapShots = useSnapShotStore((state) => state.snapShots);
   const clearSnapShotStore = useSnapShotStore(
     (state) => state.clearSnapShotStore
   );
+  const handleSendMail = useSendEmail();
 
   async function convertImageToBase64(imageUri: any) {
     try {
@@ -67,7 +69,6 @@ const useSnapShoot = () => {
   }
 
   async function handleGenerateImages() {
-    setIsLoading(true);
     await Promise.all([
       generateImage(mill1Tandem1SnapShootRef),
       generateImage(mill2Tandem1SnapShootRef),
@@ -84,7 +85,7 @@ const useSnapShoot = () => {
       generateImage(gearTandem1SnapShootRef),
       generateImage(gearTandem2SnapShootRef),
     ]);
-    setIsLoading(false);
+    setRefIsReady(true);
   }
 
   async function handleCreatePDF() {
@@ -95,64 +96,24 @@ const useSnapShoot = () => {
         html: htmlReportBody(snapShots, clientName || ''),
       });
 
-      const newPath = `${FileSystem.documentDirectory}sample.pdf`;
+      const newPath = `${
+        FileSystem.documentDirectory
+      }reporte_${randomIdGenerator()}.pdf`;
       await FileSystem.moveAsync({
         from: uri,
         to: newPath,
       });
 
-      const body = `
-      <html>
-        <body>
-          <p>Estimado/a ${clientName?.toLocaleUpperCase()},</p>
-          <p>Adjunto encontrará el reporte de temperaturas correspondiente al día ${handleFormatDate()}.</p>
-          <p>Por favor, revise el archivo adjunto para obtener detalles adicionales y gráficos. Si tiene alguna pregunta o requiere más información, no dude en contactarnos.</p>
-          <p>Gracias,</p>
-        </body>
-      </html>
-      `;
-
-      await handleSendMail(newPath, 'Reporte de temperaturas de molinos', body);
+      await handleSendMail(
+        newPath,
+        'Reporte de temperaturas de molinos',
+        htmlEmailBody(clientName || '')
+      );
+      setRefIsReady(false);
     } catch (error) {
       console.error('Error al generar el PDF:', error);
     } finally {
       setIsLoading(false);
-    }
-  }
-
-  async function handleSendMail(path: string, subject: string, body: string) {
-    try {
-      const isAvailable = await MailComposer.isAvailableAsync();
-      if (!isAvailable) {
-        Alert.alert(
-          'Error',
-          'MailComposer no está disponible en este dispositivo.'
-        );
-        return;
-      }
-
-      const options = {
-        recipients: ['lfernandez@grupotritech.com'],
-        subject: subject,
-        body: body,
-        attachments: [path],
-      };
-
-      MailComposer.composeAsync(options)
-        .then((result) => {
-          if (result.status === MailComposer.MailComposerStatus.SENT) {
-            Alert.alert('Éxito', 'Correo enviado correctamente.');
-            clearSnapShotStore();
-            router.navigate('/(tabs)');
-          } else {
-            Alert.alert('Error', 'El correo no se envió.');
-          }
-        })
-        .catch((error) => {
-          Alert.alert('Error', error.message);
-        });
-    } catch (error) {
-      console.log('error sending email:', error);
     }
   }
 
@@ -164,6 +125,19 @@ const useSnapShoot = () => {
 
     return () => clearTimeout(timeoutId); // Limpiar el timeout si el componente se desmonta
   }, []);
+
+  //check if the screen is on focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type === 'GO_BACK' || !navigation.isFocused) {
+        setIsLoading(false);
+        setRefIsReady(false);
+        clearSnapShotStore();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return {
     gearTandem1SnapShootRef,
@@ -183,6 +157,7 @@ const useSnapShoot = () => {
     handleCreatePDF,
     isLoading,
     handleGenerateImages,
+    refIsReady,
   };
 };
 

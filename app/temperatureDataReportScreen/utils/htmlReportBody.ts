@@ -77,27 +77,15 @@ export function htmlReportBody(snapShots: any, clientName: string) {
       }
 
       .logo {
-      width: 100px;
-      height: 70px;
-
-      }
-
-      @media (min-width: 600px) {
-        .report__photos img {
-          flex: 1 1 calc(50% - 10px);
-        }
-      }
-
-      @media (min-width: 900px) {
-        .report__photos img {
-          flex: 1 1 calc(33.33% - 10px);
-        }
+      width: 125px;
+      height: 92px;
+      object-fit: contain;
       }
     </style>
   </head>
   <body>
     <div class="header">
-      <img src="${'@/assets/images/tritech.webp'} src="logo Tritech" />
+      <img src="https://i.postimg.cc/DZ5kFnDD/tritech-logo.png" alt="tritech-logo" class="logo" />
     </div>
     <div class="content">
       <div class="report">
@@ -120,11 +108,26 @@ export function htmlReportBody(snapShots: any, clientName: string) {
       </div>
     </div>
     <div class="footer">
-      <img src="${'@/assets/images/tritech.webp'} src="logo Tritech" />
+      <img src="https://i.postimg.cc/wv98S7WL/fuchs.png" src="logo-Fuchs" class="logo" />
     </div>
   </body>
 </html>
 `;
 
   return htmlContent;
+}
+
+export function htmlEmailBody(clientName: string) {
+  const htmlBody = `
+      <html>
+        <body>
+          <p>Estimado/a ${clientName?.toLocaleUpperCase()},</p>
+          <p>Adjunto encontrará el reporte de temperaturas correspondiente al día ${handleFormatDate()}.</p>
+          <p>Por favor, revise el archivo adjunto para obtener detalles adicionales y gráficos. Si tiene alguna pregunta o requiere más información, no dude en contactarnos.</p>
+          <p>Gracias,</p>
+        </body>
+      </html>
+      `;
+
+  return htmlBody;
 }

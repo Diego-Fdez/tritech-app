@@ -21,7 +21,7 @@ const Tandem2ChartsView = lazy(
 
 const TemperatureDataReportView = () => {
   const { isPending } = useTemperatureDataReportScreen();
-  const { handleCreatePDF, isLoading } = useSnapShoot();
+  const { handleCreatePDF, isLoading, refIsReady } = useSnapShoot();
 
   return (
     <Suspense fallback={<LoaderView />}>
@@ -51,12 +51,14 @@ const TemperatureDataReportView = () => {
                 <ChartsView />
                 <Tandem2ChartsView />
                 <GearsChartsView />
-                <ThemedButton
-                  title={isLoading ? 'Generando PDF...' : 'Generar PDF'}
-                  style={isLoading ? styles.disabledButton : styles.button}
-                  handlePress={handleCreatePDF}
-                  disabled={isLoading}
-                />
+                {refIsReady && (
+                  <ThemedButton
+                    title={isLoading ? 'Generando PDF...' : 'Generar PDF'}
+                    style={isLoading ? styles.disabledButton : styles.button}
+                    handlePress={handleCreatePDF}
+                    disabled={isLoading}
+                  />
+                )}
               </ScrollView>
             )}
           </ThemedView>

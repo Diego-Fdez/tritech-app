@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Alert, Dimensions } from 'react-native';
 import { useCustomHeader } from '@/hooks';
 import { ErrorResponse, handleErrors } from '@/utils';
-import { API_URL, Colors } from '@/constants';
+import { API_URL } from '@/constants';
 import {
   TemperaturesDataInterface,
   TemperaturesDataResponse,
@@ -14,7 +14,6 @@ import {
   latestTemperaturesDataAdapter,
 } from '../adapters';
 import { MockTemperaturesData } from '../mockData';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { TemplateDataResponseInterface } from '@/app/temperatureData/interfaces';
 
 const { width } = Dimensions.get('window');
@@ -22,7 +21,6 @@ const { width } = Dimensions.get('window');
 const useTemperatureDataReportScreen = () => {
   const { id } = useLocalSearchParams();
   const { customHeader } = useCustomHeader();
-  const colorScheme = useColorScheme();
 
   // fetch data from DB
   const { data, isPending, error } = useQuery({
@@ -81,7 +79,8 @@ const useTemperatureDataReportScreen = () => {
       fontSize: 10,
       height: 60,
     },
-    barWidth: 16,
+    barWidth: 17,
+    spacing: 16,
     disablePress: true,
     isThreeD: true,
     barBorderRadius: 8,
