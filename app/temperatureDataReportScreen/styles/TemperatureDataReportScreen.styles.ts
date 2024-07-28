@@ -24,4 +24,11 @@ export const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
   },
+  button: {
+    marginBottom: normalize(20, 'height'),
+  },
+  disabledButton: {
+    opacity: 0.5,
+    marginBottom: normalize(20, 'height'),
+  },
 });

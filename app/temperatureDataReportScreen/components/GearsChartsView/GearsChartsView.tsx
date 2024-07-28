@@ -1,17 +1,21 @@
 import { BarChart } from 'react-native-gifted-charts';
-import { ThemedText, ThemedView } from '@/components';
-import { useTemperatureDataReportScreen } from '../../hooks';
+import ViewShot from 'react-native-view-shot';
+import { ThemedText } from '@/components';
+import { useSnapShoot, useTemperatureDataReportScreen } from '../../hooks';
 import { styles } from '../ChartsView/styles/ChartsView.styles';
 import { ABBREVIATE_NAME, GENERATE_COLOR } from '../../utils';
 
 const GearsChartsView = () => {
   const { data: temperatures, chartProps } = useTemperatureDataReportScreen();
+  const { gearTandem1SnapShootRef, gearTandem2SnapShootRef } = useSnapShoot();
 
   return (
     <>
       {temperatures?.tandem1Corona[0]?.id !== undefined && (
-        <ThemedView style={styles.chartContainer}>
-          <ThemedText type='subtitle'>Temperaturas Coronas</ThemedText>
+        <ViewShot ref={gearTandem1SnapShootRef} style={styles.snapView}>
+          <ThemedText type='subtitle' style={styles.subTitle}>
+            Temperaturas Coronas
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem1M1Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -26,11 +30,13 @@ const GearsChartsView = () => {
             }))}
             {...chartProps}
           />
-        </ThemedView>
+        </ViewShot>
       )}
       {temperatures?.tandem2Corona[0]?.id !== undefined && (
-        <ThemedView style={styles.chartContainer}>
-          <ThemedText type='subtitle'>Temperaturas Coronas Tandem 2</ThemedText>
+        <ViewShot ref={gearTandem2SnapShootRef} style={styles.snapView}>
+          <ThemedText type='subtitle' style={styles.subTitle}>
+            Temperaturas Coronas Tandem 2
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem1M2Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -45,7 +51,7 @@ const GearsChartsView = () => {
             }))}
             {...chartProps}
           />
-        </ThemedView>
+        </ViewShot>
       )}
     </>
   );

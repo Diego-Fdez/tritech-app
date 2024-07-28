@@ -1,10 +1,10 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import axios, { AxiosResponse } from 'axios';
 import { Alert, Dimensions } from 'react-native';
 import { useCustomHeader } from '@/hooks';
 import { ErrorResponse, handleErrors } from '@/utils';
-import { API_URL } from '@/constants';
+import { API_URL, Colors } from '@/constants';
 import {
   TemperaturesDataInterface,
   TemperaturesDataResponse,
@@ -14,11 +14,15 @@ import {
   latestTemperaturesDataAdapter,
 } from '../adapters';
 import { MockTemperaturesData } from '../mockData';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { TemplateDataResponseInterface } from '@/app/temperatureData/interfaces';
+
+const { width } = Dimensions.get('window');
 
 const useTemperatureDataReportScreen = () => {
   const { id } = useLocalSearchParams();
   const { customHeader } = useCustomHeader();
-  const { width } = Dimensions.get('window');
+  const colorScheme = useColorScheme();
 
   // fetch data from DB
   const { data, isPending, error } = useQuery({
@@ -26,6 +30,13 @@ const useTemperatureDataReportScreen = () => {
     queryFn: getTemperaturesByDateAndTemplateId,
     enabled: !!id,
     initialData: MockTemperaturesData,
+  });
+
+  //fetch template data from DB
+  const { data: clientName } = useQuery({
+    queryKey: ['temperatureDataTemplate'],
+    queryFn: getTemplateById,
+    enabled: !!id,
   });
 
   async function getTemperaturesByDateAndTemplateId() {
@@ -43,7 +54,20 @@ const useTemperatureDataReportScreen = () => {
       const groupedComponents = groupComponentsByCriteria(adaptedData);
 
       return groupedComponents;
-    } catch (error: AxiosError | any) {
+    } catch (error: any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
+    }
+  }
+
+  async function getTemplateById() {
+    try {
+      const { data }: AxiosResponse<TemplateDataResponseInterface> =
+        await axios(`${API_URL}/templates/id/${id}`, customHeader);
+
+      return data?.data?.client?.clientName;
+    } catch (error: any) {
       const errorResult: ErrorResponse = handleErrors(error);
 
       Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
@@ -57,10 +81,21 @@ const useTemperatureDataReportScreen = () => {
       fontSize: 10,
       height: 60,
     },
-    barWidth: 20,
+    barWidth: 16,
+    disablePress: true,
+    isThreeD: true,
+    barBorderRadius: 8,
+    activeOpacity: 0.7,
+    yAxisLabelSuffix: '°C',
+    showLine: true,
+    lineConfig: {
+      curved: true,
+      hideDataPoints: true,
+      shiftY: 6,
+    },
   };
 
-  return { data, isPending, error, chartProps };
+  return { data, isPending, error, chartProps, clientName };
 };
 
 export default useTemperatureDataReportScreen;
