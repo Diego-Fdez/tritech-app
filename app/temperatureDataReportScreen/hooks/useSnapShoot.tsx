@@ -109,11 +109,12 @@ const useSnapShoot = () => {
         'Reporte de temperaturas de molinos',
         htmlEmailBody(clientName || '')
       );
-      setRefIsReady(false);
     } catch (error) {
       console.error('Error al generar el PDF:', error);
     } finally {
       setIsLoading(false);
+      setRefIsReady(false);
+      clearSnapShotStore();
     }
   }
 

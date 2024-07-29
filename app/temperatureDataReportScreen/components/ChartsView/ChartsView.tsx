@@ -23,6 +23,9 @@ const ChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 1
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
+          </ThemedText>
           <BarChart
             data={temperatures.tandem1M1Bronce.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -43,6 +46,9 @@ const ChartsView = () => {
         <ViewShot ref={mill2Tandem1SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 2
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
           </ThemedText>
           <BarChart
             data={temperatures?.tandem1M2Bronce?.map((item) => ({
@@ -65,6 +71,9 @@ const ChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 3
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem1M3Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -85,6 +94,9 @@ const ChartsView = () => {
         <ViewShot ref={mill4Tandem1SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 4
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
           </ThemedText>
           <BarChart
             data={temperatures?.tandem1M4Bronce?.map((item) => ({
@@ -107,6 +119,9 @@ const ChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 5
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem1M5Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -127,6 +142,9 @@ const ChartsView = () => {
         <ViewShot ref={mill6Tandem1SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 6
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
           </ThemedText>
           <BarChart
             data={temperatures?.tandem1M6Bronce?.map((item) => ({

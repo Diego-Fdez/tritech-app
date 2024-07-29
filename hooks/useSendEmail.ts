@@ -1,13 +1,10 @@
 import * as MailComposer from 'expo-mail-composer';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import { useSnapShotStore, useUserStore } from '@/store';
+import { useUserStore } from '@/store';
 
 const useSendEmail = () => {
   const user = useUserStore((state) => state.user);
-  const clearSnapShotStore = useSnapShotStore(
-    (state) => state.clearSnapShotStore
-  );
 
   async function handleSendMail(
     attachments: string,
@@ -35,7 +32,6 @@ const useSendEmail = () => {
         .then((result) => {
           if (result.status === MailComposer.MailComposerStatus.SENT) {
             Alert.alert('Éxito', 'Correo enviado correctamente.');
-            clearSnapShotStore();
             router.navigate('/(tabs)');
           } else {
             Alert.alert('Error', 'El correo no se envió.');

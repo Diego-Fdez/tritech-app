@@ -42,7 +42,7 @@ const useTemperatureDataReportScreen = () => {
 
     try {
       const { data }: AxiosResponse<TemperaturesDataResponse> = await axios(
-        `${API_URL}/temperature-data/2024-07-21 18:00:54.296537?templateId=${id}`,
+        `${API_URL}/temperature-data/${now}?templateId=${id}`,
         customHeader
       );
 

@@ -19,35 +19,36 @@ const Tandem2ChartsView = () => {
   return (
     <>
       {temperatures?.tandem2M1Bronce[0]?.id !== undefined && (
-        <>
-          <ThemedText type='title' style={styles.title}>
+        <ViewShot ref={mill1Tandem2SnapShootRef} style={styles.snapView}>
+          <ThemedText type='subtitle' style={styles.subTitle}>
+            Temperaturas Bronces Molino 1
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
             Tandem 2
           </ThemedText>
-          <ViewShot ref={mill1Tandem2SnapShootRef} style={styles.snapView}>
-            <ThemedText type='subtitle' style={styles.subTitle}>
-              Temperaturas Bronces Molino 1
-            </ThemedText>
-            <BarChart
-              data={temperatures?.tandem2M1Bronce?.map((item) => ({
-                value: item.millComponent?.temperature || 0,
-                label:
-                  ABBREVIATE_NAME[
-                    item.millComponent?.componentName?.toLowerCase() || ''
-                  ],
-                frontColor:
-                  GENERATE_COLOR[
-                    item.millComponent?.componentName?.toLowerCase() || ''
-                  ],
-              }))}
-              {...chartProps}
-            />
-          </ViewShot>
-        </>
+          <BarChart
+            data={temperatures?.tandem2M1Bronce?.map((item) => ({
+              value: item.millComponent?.temperature || 0,
+              label:
+                ABBREVIATE_NAME[
+                  item.millComponent?.componentName?.toLowerCase() || ''
+                ],
+              frontColor:
+                GENERATE_COLOR[
+                  item.millComponent?.componentName?.toLowerCase() || ''
+                ],
+            }))}
+            {...chartProps}
+          />
+        </ViewShot>
       )}
       {temperatures?.tandem2M2Bronce[0]?.id !== undefined && (
         <ViewShot ref={mill2Tandem2SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 2
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
           </ThemedText>
           <BarChart
             data={temperatures?.tandem2M2Bronce?.map((item) => ({
@@ -70,6 +71,9 @@ const Tandem2ChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 3
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem2M3Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -90,6 +94,9 @@ const Tandem2ChartsView = () => {
         <ViewShot ref={mill4Tandem2SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 4
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
           </ThemedText>
           <BarChart
             data={temperatures?.tandem2M4Bronce?.map((item) => ({
@@ -112,6 +119,9 @@ const Tandem2ChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 5
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem2M5Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -132,6 +142,9 @@ const Tandem2ChartsView = () => {
         <ViewShot ref={mill6Tandem2SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Bronces Molino 6
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
           </ThemedText>
           <BarChart
             data={temperatures?.tandem2M6Bronce?.map((item) => ({

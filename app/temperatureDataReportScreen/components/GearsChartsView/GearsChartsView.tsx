@@ -16,6 +16,9 @@ const GearsChartsView = () => {
           <ThemedText type='subtitle' style={styles.subTitle}>
             Temperaturas Coronas
           </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 1
+          </ThemedText>
           <BarChart
             data={temperatures?.tandem1M1Bronce?.map((item) => ({
               value: item.millComponent?.temperature || 0,
@@ -35,7 +38,10 @@ const GearsChartsView = () => {
       {temperatures?.tandem2Corona[0]?.id !== undefined && (
         <ViewShot ref={gearTandem2SnapShootRef} style={styles.snapView}>
           <ThemedText type='subtitle' style={styles.subTitle}>
-            Temperaturas Coronas Tandem 2
+            Temperaturas Coronas
+          </ThemedText>
+          <ThemedText type='default' style={styles.subTitle}>
+            Tandem 2
           </ThemedText>
           <BarChart
             data={temperatures?.tandem1M2Bronce?.map((item) => ({
