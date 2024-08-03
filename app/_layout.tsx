@@ -6,13 +6,14 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Container from 'toastify-react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useUserStore } from '../store';
+import { set } from 'react-hook-form';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -20,6 +21,7 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
+  const [route, setRoute] = useState<string>('');
   const user = useUserStore((state) => state.user);
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -28,6 +30,12 @@ export default function RootLayout() {
     UbuntuMedium: require('../assets/fonts/Ubuntu-Medium.ttf'),
     UbuntuBold: require('../assets/fonts/Ubuntu-Bold.ttf'),
   });
+
+  useEffect(() => {
+    if (user) {
+      setRoute('(tabs)');
+    } else setRoute('index');
+  }, [user]);
 
   useEffect(() => {
     if (loaded) {
@@ -47,7 +55,7 @@ export default function RootLayout() {
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
           <Stack
-            initialRouteName={user ? '(tabs)' : 'index'}
+            initialRouteName={route}
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name='index' />

@@ -1,17 +1,31 @@
 import { useState, createContext, useContext } from 'react';
-import { randomIdGenerator } from '@/utils';
+import { useMutation } from '@tanstack/react-query';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { Alert } from 'react-native';
+import { router } from 'expo-router';
+import { ErrorResponse, handleErrors, randomIdGenerator } from '@/utils';
 import {
   CheckListContextType,
   CheckListProviderProps,
   QuestionInterface,
+  ClientInterface,
+  FormResponse,
 } from '../interfaces';
+import { useUserStore } from '@/store';
+import { checkListSendData } from '../adapter';
+import { API_URL } from '@/constants';
+import { useCustomHeader } from '@/hooks';
 
 const CheckListContext = createContext<CheckListContextType | undefined>(
   undefined
 );
 
 const CheckListProvider = ({ children }: CheckListProviderProps) => {
-  const [client, setClient] = useState<object>({});
+  const user = useUserStore((state) => state.user);
+  const { customHeader } = useCustomHeader();
+  const [client, setClient] = useState<ClientInterface>({} as ClientInterface);
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [questions, setQuestions] = useState<QuestionInterface[]>([
     {
       id: randomIdGenerator(),
@@ -117,6 +131,37 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
     );
   };
 
+  async function handleRegisterForm() {
+    const dataBody = {
+      title,
+      description,
+      clientId: client?.id,
+      createdById: user?.id,
+      questions: checkListSendData(questions),
+    };
+
+    try {
+      const { data }: AxiosResponse<FormResponse> = await axios.post(
+        `${API_URL}/form`,
+        dataBody,
+        customHeader
+      );
+
+      Alert.alert('Éxito', 'Formulario creado correctamente');
+      router.navigate('/(tabs)');
+
+      return data;
+    } catch (error: AxiosError | any) {
+      const errorResult: ErrorResponse = handleErrors(error);
+
+      Alert.alert(`${errorResult?.status}`, `${errorResult?.errorMessage}`);
+    }
+  }
+
+  const mutation = useMutation({
+    mutationFn: handleRegisterForm,
+  });
+
   const value = {
     handleAddQuestion,
     questions,
@@ -127,6 +172,11 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
     handleQuestionTypeChange,
     handleDeleteInput,
     handleDeleteQuestion,
+    title,
+    description,
+    setTitle,
+    setDescription,
+    mutation,
   };
 
   return (

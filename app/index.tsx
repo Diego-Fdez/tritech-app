@@ -52,7 +52,6 @@ const LoginScreen = () => {
               placeholderTextColor={
                 Colors[colorScheme ?? 'light'].tabIconDefault
               }
-              defaultValue={emailInput || ''}
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -60,6 +59,7 @@ const LoginScreen = () => {
             />
           )}
           name='email'
+          defaultValue={emailInput ?? ''}
         />
         {errors.email && (
           <Text style={styles.errorText}>{errors.email.message}</Text>

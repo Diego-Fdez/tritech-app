@@ -12,6 +12,7 @@ import { Colors } from '@/constants';
 import {
   ErrorView,
   NavView,
+  ThemedButton,
   ThemedInput,
   ThemedText,
   ThemedView,
@@ -24,7 +25,16 @@ import { useCheckList } from './context/checkListProvider';
 
 const CheckListScreen = () => {
   const colorScheme = useColorScheme();
-  const { setClient, handleAddQuestion, questions } = useCheckList();
+  const {
+    setClient,
+    handleAddQuestion,
+    questions,
+    mutation,
+    setDescription,
+    setTitle,
+    title,
+    description,
+  } = useCheckList();
 
   const error = false;
 
@@ -60,6 +70,8 @@ const CheckListScreen = () => {
                       placeholderTextColor={
                         Colors[colorScheme ?? 'light'].tabIconDefault
                       }
+                      onChangeText={setTitle}
+                      value={title}
                     />
                   </ThemedView>
                   <ThemedView style={styles.inputContainer}>
@@ -69,6 +81,8 @@ const CheckListScreen = () => {
                       placeholderTextColor={
                         Colors[colorScheme ?? 'light'].tabIconDefault
                       }
+                      onChangeText={setDescription}
+                      value={description}
                     />
                   </ThemedView>
                   <ThemedView
@@ -86,6 +100,10 @@ const CheckListScreen = () => {
                       questionType={question.type}
                     />
                   ))}
+                  <ThemedButton
+                    title='Guardar formulario'
+                    handlePress={() => mutation.mutate()}
+                  />
                 </ScrollView>
               )}
               {!error && (

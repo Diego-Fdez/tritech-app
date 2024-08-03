@@ -7,6 +7,11 @@ export interface QuestionInterface {
   inputs: InputsInterface[];
 }
 
+export interface ClientInterface {
+  id: string;
+  clientName: string;
+}
+
 export interface CheckListContextType {
   handleAddQuestion: () => void;
   questions: QuestionInterface[];
@@ -17,11 +22,16 @@ export interface CheckListContextType {
     questionType: string,
     text: string
   ) => void;
-  setClient: React.Dispatch<React.SetStateAction<object>>;
+  setClient: React.Dispatch<React.SetStateAction<ClientInterface>>;
   handleInputQuestionChange: (questionId: string, value: string) => void;
   handleQuestionTypeChange: (questionId: string, type: string) => void;
   handleDeleteInput: (questionId: string, inputId: string) => void;
   handleDeleteQuestion: (questionId: string) => void;
+  title: string;
+  description: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  mutation: any;
 }
 
 export interface CheckListProviderProps {
@@ -38,4 +48,9 @@ export interface QuestionsViewProps {
   questionId: string;
   questionInputs: InputsInterface[];
   questionType: string;
+}
+
+export interface FormResponse {
+  message: string;
+  statusCode: number;
 }
