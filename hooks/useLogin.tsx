@@ -22,6 +22,7 @@ interface DataInterface {
 const useLogin = () => {
   const setUser = useUserStore((state) => state.setUser);
   const setToken = useUserStore((state) => state.setToken);
+  const setEmailInput = useUserStore((state) => state.setEmailInput);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup
@@ -53,6 +54,7 @@ const useLogin = () => {
 
       setUser(userInformationAdapter(data?.user));
       setToken(data?.accessToken);
+      setEmailInput(email);
       router.navigate('/(tabs)');
     } catch (error: AxiosError | any) {
       const errorResult: ErrorResponse = handleErrors(error);

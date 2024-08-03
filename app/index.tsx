@@ -13,8 +13,10 @@ import { styles } from './styles/Login.styles';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useLogin } from '@/hooks';
+import { useUserStore } from '@/store';
 
 const LoginScreen = () => {
+  const emailInput = useUserStore((state) => state.emailInput);
   const colorScheme = useColorScheme();
   const { handleLogin, isLoading, schema } = useLogin();
   const {
@@ -44,12 +46,13 @@ const LoginScreen = () => {
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => (
             <ThemedInput
-              placeholder='diego@grupotritech.com'
+              placeholder='ejemplo@grupotritech.com'
               keyboardType='email-address'
               style={styles.input}
               placeholderTextColor={
                 Colors[colorScheme ?? 'light'].tabIconDefault
               }
+              defaultValue={emailInput || ''}
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}

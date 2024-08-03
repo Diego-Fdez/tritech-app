@@ -13,10 +13,7 @@ export const BUTTONS_DATA: ButtonsDataInterface[] = [
     id: '1',
     image: require('@/assets/images/checklist.webp'),
     title: 'Checklist',
-    fn: () =>
-      router.navigate(
-        `/temperatureDataReportScreen/c000ff9b-34b1-49d6-b37e-28bdcb09b1e4`
-      ),
+    fn: () => router.navigate(`/checkListScreen`),
   },
   {
     id: '2',
