@@ -18,22 +18,13 @@ import {
 } from '@/components';
 import { styles } from './styles/CheckListScreen.styles';
 import { ClientPicker } from '../temperatureTemplate/components';
-import { useCheckList } from './hooks';
 import { QuestionsView } from './components';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useCheckList } from './context/checkListProvider';
 
 const CheckListScreen = () => {
   const colorScheme = useColorScheme();
-  const {
-    setClient,
-    handleAddQuestion,
-    questions,
-    setType,
-    type,
-    animatedStyle,
-    handleInputChange,
-    handleInputQuestionChange,
-  } = useCheckList();
+  const { setClient, handleAddQuestion, questions } = useCheckList();
 
   const error = false;
 
@@ -92,11 +83,7 @@ const CheckListScreen = () => {
                       index={index}
                       questionId={question.id}
                       questionInputs={question.inputs}
-                      //type={type}
-                      //setType={setType}
-                      animatedStyle={animatedStyle}
-                      handleInputChange={handleInputChange}
-                      handleInputQuestionChange={handleInputQuestionChange}
+                      questionType={question.type}
                     />
                   ))}
                 </ScrollView>

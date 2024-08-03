@@ -9,18 +9,16 @@ export const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: normalize(20, 'height'),
+    marginBottom: normalize(25, 'height'),
   },
   animatedContainer: {
     width: '100%',
     zIndex: 10,
     backgroundColor: 'transparent',
-    minHeight: 200,
-    height: 200,
   },
   wrapper: {
     width: '100%',
-    minHeight: 200,
+    minHeight: normalize(170, 'height'),
     paddingBottom: normalize(10, 'height'),
     paddingHorizontal: normalize(8, 'width'),
     borderRadius: normalize(12),
@@ -30,7 +28,6 @@ export const styles = StyleSheet.create({
     borderBottomColor: Colors.light.tint,
     borderEndColor: '#0a7da485',
     borderStartColor: '#0a7da485',
-    marginBottom: normalize(10, 'height'),
     gap: normalize(10, 'height'),
   },
   buttonsContainer: {

@@ -5,43 +5,28 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { ThemedInput, ThemedText, ThemedView } from '@/components';
 import { styles } from './styles/QuestionView.styles';
 import QuestionTypeView from '../QuestionTypeView/QuestionTypeView';
-import { useCheckList } from '../../hooks';
 import { Colors } from '@/constants';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
-interface InputsInterface {
-  id: string;
-  value: string;
-}
-
-interface QuestionsViewProps {
-  index: number;
-  questionId: string;
-  questionInputs: InputsInterface[];
-  //type: string;
-  //setType: (type: string) => void;
-  animatedStyle: any;
-  handleInputChange: (
-    questionId: string,
-    inputId: string,
-    type: string,
-    text: string
-  ) => void;
-  handleInputQuestionChange: (questionId: string, text: string) => void;
-}
+import { useCheckList } from '../../context/checkListProvider';
+import { useGestures } from '../../hooks';
+import { OptionsButtons } from './components';
+import { QuestionsViewProps } from '../../interfaces';
 
 const QuestionsView = ({
   index,
   questionId,
   questionInputs,
-  //type,
-  //setType,
-  animatedStyle,
-  handleInputChange,
-  handleInputQuestionChange,
+  questionType,
 }: QuestionsViewProps) => {
-  const { panGesture, setType, type } = useCheckList();
+  const {
+    handleInputChange,
+    handleInputQuestionChange,
+    handleQuestionTypeChange,
+    handleAddInput,
+    handleDeleteInput,
+  } = useCheckList();
   const colorScheme = useColorScheme();
+  const { animatedStyle, panGesture } = useGestures({ questionId });
 
   return (
     <ThemedView style={styles.container}>
@@ -52,7 +37,9 @@ const QuestionsView = ({
               <ThemedText type='defaultSemiBold'>
                 {index + 1}. Tipo de pregunta:
               </ThemedText>
-              <QuestionTypeView setType={setType} />
+              <QuestionTypeView
+                setType={(type) => handleQuestionTypeChange(questionId, type)}
+              />
             </ThemedView>
             <ThemedInput
               placeholder='Pregunta sin título'
@@ -61,60 +48,62 @@ const QuestionsView = ({
               }
             />
             {questionInputs.map((input, index) => {
-              if (type === 'Párrafo') {
+              if (questionType === 'Párrafo') {
                 return (
                   <ThemedInput
                     key={input.id}
                     placeholder={`Opción ${index + 1}`}
                     value={input.value}
                     onChangeText={(text) =>
-                      handleInputChange(questionId, input.id, type, text)
+                      handleInputChange(
+                        questionId,
+                        input.id,
+                        questionType,
+                        text
+                      )
                     }
                   />
                 );
-              } else if (type === 'Selección única') {
-                return (
-                  <ThemedView key={input.id}>
-                    <ThemedView style={styles.bouncyContainer}>
-                      <BouncyCheckbox
-                        size={25}
-                        fillColor={Colors.light.tint}
-                        unFillColor={Colors[colorScheme ?? 'light'].background}
-                        iconStyle={{ borderColor: Colors.light.tint }}
-                        innerIconStyle={{ borderWidth: 2 }}
-                        style={{ width: 25 }}
-                      />
-                      <ThemedInput
-                        style={styles.bouncyInput}
-                        placeholder={`Opción 1`}
-                        value={input.value}
-                        onChangeText={(text) =>
-                          handleInputChange(questionId, input.id, type, text)
+              } else {
+                if (questionType === 'Selección multiple') {
+                  return (
+                    <ThemedView key={input.id}>
+                      <OptionsButtons
+                        handleAddPress={() => handleAddInput(questionId)}
+                        handleRemovePress={() =>
+                          handleDeleteInput(questionId, input.id)
                         }
                       />
+                      <ThemedView style={styles.bouncyContainer}>
+                        <BouncyCheckbox
+                          size={25}
+                          fillColor={Colors.light.tint}
+                          unFillColor={
+                            Colors[colorScheme ?? 'light'].background
+                          }
+                          iconStyle={{ borderColor: Colors.light.tint }}
+                          innerIconStyle={{ borderWidth: 2 }}
+                          style={{ width: 25 }}
+                          disabled={true}
+                        />
+                        <ThemedInput
+                          style={styles.bouncyInput}
+                          placeholder={`Sin descripción`}
+                          value={input.value}
+                          onChangeText={(text) =>
+                            handleInputChange(
+                              questionId,
+                              input.id,
+                              questionType,
+                              text
+                            )
+                          }
+                        />
+                      </ThemedView>
                     </ThemedView>
-                    <ThemedView style={styles.bouncyContainer} key={input.id}>
-                      <BouncyCheckbox
-                        size={25}
-                        fillColor={Colors.light.tint}
-                        unFillColor={Colors[colorScheme ?? 'light'].background}
-                        iconStyle={{ borderColor: Colors.light.tint }}
-                        innerIconStyle={{ borderWidth: 2 }}
-                        style={{ width: 25 }}
-                      />
-                      <ThemedInput
-                        style={styles.bouncyInput}
-                        placeholder={`Opción 2`}
-                        value={input.value}
-                        onChangeText={(text) =>
-                          handleInputChange(questionId, input.id, type, text)
-                        }
-                      />
-                    </ThemedView>
-                  </ThemedView>
-                );
+                  );
+                }
               }
-              return null;
             })}
           </ThemedView>
         </Animated.View>
