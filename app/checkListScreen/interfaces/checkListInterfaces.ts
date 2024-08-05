@@ -54,3 +54,9 @@ export interface FormResponse {
   message: string;
   statusCode: number;
 }
+
+export enum QuestionTypes {
+  SINGLE = 'Selección única',
+  MULTIPLE = 'Selección multiple',
+  TEXT = 'Párrafo',
+}

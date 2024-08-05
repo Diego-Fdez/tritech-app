@@ -14,3 +14,10 @@ export interface TemplateByClientIdInterface {
   message: string;
   data: TemplateDataInterface[];
 }
+
+export enum TemplateTypesEnum {
+  TEMPERATURAS_BRONCES = 'TB',
+  TEMPERATURAS_TRANSMISIONES = 'TT',
+  INDICES_INGENIOS = 'II',
+  CHECKLIST = 'CH',
+}

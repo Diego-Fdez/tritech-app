@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import { useLocalSearchParams, router } from 'expo-router';
 import { API_URL } from '@/constants';
 import { useCustomHeader } from '@/hooks';
-import { TemplateByClientIdInterface } from '../interfaces';
+import { TemplateByClientIdInterface, TemplateTypesEnum } from '../interfaces';
 import { templateByClientIdAdapter } from '../../adapter';
 
 const useTemplateByClientId = () => {
@@ -22,11 +22,16 @@ const useTemplateByClientId = () => {
       `${API_URL}/templates/clientId/${clientId}`,
       customHeader
     );
+
     return templateByClientIdAdapter(data?.data);
   }
 
-  function handleRedirect(templateId: string) {
-    router.navigate(`/temperatureData/${templateId}`);
+  function handleRedirect(templateId: string, templateType: string) {
+    if (templateType === TemplateTypesEnum.TEMPERATURAS_BRONCES) {
+      router.navigate(`/temperatureData/${templateId}`);
+    } else if (templateType === TemplateTypesEnum.CHECKLIST) {
+      router.navigate(`/checkListScreen/checkListByIdScreen/${templateId}`);
+    }
   }
 
   return { data, isPending, isError, handleRedirect };

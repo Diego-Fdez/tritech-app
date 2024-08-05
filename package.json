@@ -39,6 +39,7 @@
     "react-hook-form": "7.51.5",
     "react-native": "0.74.3",
     "react-native-bouncy-checkbox": "4.0.1",
+    "react-native-bouncy-checkbox-group": "1.0.0",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-gifted-charts": "1.4.19",
     "react-native-linear-gradient": "2.8.3",

@@ -21,7 +21,8 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const [route, setRoute] = useState<string>('');
+  const [isReady, setIsReady] = useState(false);
+  const [route, setRoute] = useState<string | null>(null);
   const user = useUserStore((state) => state.user);
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -32,18 +33,32 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (user) {
-      setRoute('(tabs)');
-    } else setRoute('index');
-  }, [user]);
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        // Aquí puedes cargar cualquier recurso o datos que necesites
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
 
   useEffect(() => {
-    if (loaded) {
+    if (isReady && loaded) {
+      if (user?.id?.length > 0) {
+        setRoute('(tabs)');
+      } else {
+        setRoute('index');
+      }
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [isReady, loaded, user]);
 
-  if (!loaded) {
+  if (!isReady || !loaded || route === null) {
     return null;
   }
 

@@ -65,7 +65,10 @@ const QuestionsView = ({
                   />
                 );
               } else {
-                if (questionType === 'Selección multiple') {
+                if (
+                  questionType === 'Selección multiple' ||
+                  questionType === 'Selección única'
+                ) {
                   return (
                     <ThemedView key={input.id}>
                       <OptionsButtons

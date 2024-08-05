@@ -45,7 +45,9 @@ const TemplatesByClientIdScreen = () => {
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         style={styles.button}
-                        onPress={() => handleRedirect(item?.id)}
+                        onPress={() =>
+                          handleRedirect(item?.id, item.templateType)
+                        }
                       >
                         <Image
                           source={require('@/assets/images/graphic.webp')}

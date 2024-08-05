@@ -15,6 +15,7 @@ import { useUserStore } from '@/store';
 import { checkListSendData } from '../adapter';
 import { API_URL } from '@/constants';
 import { useCustomHeader } from '@/hooks';
+import { validateEmptyFields } from '../utils';
 
 const CheckListContext = createContext<CheckListContextType | undefined>(
   undefined
@@ -131,6 +132,7 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
     );
   };
 
+  //fn to register a new form into DB
   async function handleRegisterForm() {
     const dataBody = {
       title,
@@ -141,6 +143,8 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
     };
 
     try {
+      validateEmptyFields(title, user?.id, client?.id);
+
       const { data }: AxiosResponse<FormResponse> = await axios.post(
         `${API_URL}/form`,
         dataBody,

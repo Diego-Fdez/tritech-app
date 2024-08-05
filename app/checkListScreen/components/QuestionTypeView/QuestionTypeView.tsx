@@ -18,6 +18,10 @@ const QUESTION_TYPES = [
     id: '2',
     type: 'Selección multiple',
   },
+  {
+    id: '3',
+    type: 'Selección única',
+  },
 ];
 
 const QuestionTypeView = ({ setType }: QuestionTypePickerPropsInterface) => {
