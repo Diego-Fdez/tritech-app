@@ -43,6 +43,9 @@ const QuestionsView = ({
             </ThemedView>
             <ThemedInput
               placeholder='Pregunta sin título'
+              placeholderTextColor={
+                Colors[colorScheme ?? 'light'].tabIconDefault
+              }
               onChangeText={(text) =>
                 handleInputQuestionChange(questionId, text)
               }
@@ -52,7 +55,10 @@ const QuestionsView = ({
                 return (
                   <ThemedInput
                     key={input.id}
-                    placeholder={`Opción ${index + 1}`}
+                    placeholder={`Campo para respuesta (no editar)`}
+                    placeholderTextColor={
+                      Colors[colorScheme ?? 'light'].tabIconDefault
+                    }
                     value={input.value}
                     onChangeText={(text) =>
                       handleInputChange(
@@ -62,6 +68,7 @@ const QuestionsView = ({
                         text
                       )
                     }
+                    editable={false}
                   />
                 );
               } else {
@@ -86,12 +93,14 @@ const QuestionsView = ({
                           }
                           iconStyle={{ borderColor: Colors.light.tint }}
                           innerIconStyle={{ borderWidth: 2 }}
-                          style={{ width: 25 }}
+                          style={{ width: 25, marginRight: 5 }}
                           disabled={true}
                         />
                         <ThemedInput
-                          style={styles.bouncyInput}
-                          placeholder={`Sin descripción`}
+                          placeholder={'Opción sin título'}
+                          placeholderTextColor={
+                            Colors[colorScheme ?? 'light'].tabIconDefault
+                          }
                           value={input.value}
                           onChangeText={(text) =>
                             handleInputChange(

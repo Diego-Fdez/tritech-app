@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
 import { useLocalSearchParams, router } from 'expo-router';
-import { Alert } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { API_URL, Colors } from '@/constants';
 import { useCustomHeader } from '@/hooks';
 import { ErrorResponse, handleErrors } from '@/utils';
 import {
   AdaptedCheckListResponse,
   CheckListResponseInterface,
+  OptionsDataResponseInterface,
 } from '../interfaces/checkListByIdInterfaces';
 import { checkListDataAdapter } from '../adapters';
 import { CHECKLIST_MOCK } from '../mocks';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { CheckboxButton } from 'react-native-bouncy-checkbox-group';
+import { ThemedText } from '@/components';
 
 const useCheckListByIdScreen = () => {
   const { customHeader } = useCustomHeader();
@@ -55,9 +58,27 @@ const useCheckListByIdScreen = () => {
       borderColor: Colors.light.tint,
     },
     innerIconStyle: { borderWidth: 2 },
+    style: { marginTop: 6, gap: 5 },
   };
 
-  return { data, isPending, isError, checkBoxGroupStyles, colorScheme };
+  function createCheckBoxGroup(data: OptionsDataResponseInterface[]) {
+    const checkBoxData: CheckboxButton[] = data.map((item) => ({
+      id: item.id,
+      text: item.optionText,
+      textComponent: <ThemedText>{item.optionText}</ThemedText>,
+    }));
+
+    return checkBoxData;
+  }
+
+  return {
+    data,
+    isPending,
+    isError,
+    checkBoxGroupStyles,
+    colorScheme,
+    createCheckBoxGroup,
+  };
 };
 
 export default useCheckListByIdScreen;

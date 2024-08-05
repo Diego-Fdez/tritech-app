@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import BouncyCheckboxGroup, {
   CheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {
   ErrorView,
   LoaderView,
@@ -23,8 +24,14 @@ import { styles } from './styles/CheckListByIdScreen.styles';
 import { QuestionTypes } from '../interfaces';
 
 const CheckListByIdScreen = () => {
-  const { data, isPending, isError, checkBoxGroupStyles, colorScheme } =
-    useCheckListByIdScreen();
+  const {
+    data,
+    isPending,
+    isError,
+    checkBoxGroupStyles,
+    colorScheme,
+    createCheckBoxGroup,
+  } = useCheckListByIdScreen();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,52 +68,64 @@ const CheckListByIdScreen = () => {
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     style={{ width: '100%' }}
-                    renderItem={({ item, index }) => (
+                    renderItem={({ item }) => (
                       <ThemedView style={styles.formContainer}>
-                        <ThemedText type='defaultSemiBold'>
-                          {`${index}. ${item?.textQuestion}`}
+                        <ThemedText
+                          type='defaultSemiBold'
+                          style={styles.questionText}
+                        >
+                          {`${item?.order}. ${item?.textQuestion}`}
                         </ThemedText>
-                        {item?.options?.map((option) => (
-                          <ThemedView
-                            key={option?.id}
-                            style={styles.formContainer}
-                          >
-                            {item?.typeQuestion === QuestionTypes.MULTIPLE ||
-                            item?.typeQuestion === QuestionTypes.SINGLE ? (
-                              <ThemedView
-                                style={styles.questionOptionContainer}
-                              >
-                                <BouncyCheckboxGroup
-                                  data={[
-                                    {
-                                      id: `${option?.id}`,
-                                      ...checkBoxGroupStyles,
-                                    },
-                                  ]}
-                                  onChange={(selectedItem: CheckboxButton) => {
-                                    console.log(
-                                      'SelectedItem: ',
-                                      JSON.stringify(selectedItem)
-                                    );
-                                  }}
-                                />
-                                <ThemedText>{option.optionText}</ThemedText>
-                              </ThemedView>
-                            ) : (
-                              <ThemedView
-                                style={styles.questionOptionContainer}
-                              >
-                                <ThemedInput
-                                  placeholder='Escribe tu respuesta'
-                                  placeholderTextColor={
-                                    Colors[colorScheme ?? 'light']
-                                      .tabIconDefault
+                        <ThemedView style={styles.formContainer}>
+                          {item?.typeQuestion === QuestionTypes.SINGLE ? (
+                            <BouncyCheckboxGroup
+                              data={createCheckBoxGroup(item.options)}
+                              style={{ flexDirection: 'column' }}
+                              checkboxProps={{ ...checkBoxGroupStyles }}
+                              onChange={(selectedItem: CheckboxButton) => {
+                                const { textComponent, ...rest } = selectedItem;
+                                console.log(
+                                  'SelectedItem: ',
+                                  JSON.stringify(rest)
+                                );
+                              }}
+                            />
+                          ) : item?.typeQuestion === QuestionTypes.TEXT ? (
+                            <ThemedView style={styles.questionOptionContainer}>
+                              <ThemedInput
+                                placeholder='Escribe tu respuesta'
+                                placeholderTextColor={
+                                  Colors[colorScheme ?? 'light'].tabIconDefault
+                                }
+                              />
+                            </ThemedView>
+                          ) : (
+                            <>
+                              {item?.options?.map((option) => (
+                                <BouncyCheckbox
+                                  key={option.id}
+                                  size={25}
+                                  fillColor={Colors.light.tint}
+                                  unFillColor={
+                                    Colors[colorScheme ?? 'light'].background
                                   }
+                                  iconStyle={{
+                                    borderColor: Colors.light.tint,
+                                    marginBottom: 5,
+                                  }}
+                                  innerIconStyle={{ borderWidth: 2 }}
+                                  textStyle={{
+                                    fontFamily: 'UbuntuRegular',
+                                    color: Colors[colorScheme ?? 'light'].text,
+                                    marginLeft: 0,
+                                    textDecorationLine: 'none',
+                                  }}
+                                  text={option?.optionText}
                                 />
-                              </ThemedView>
-                            )}
-                          </ThemedView>
-                        ))}
+                              ))}
+                            </>
+                          )}
+                        </ThemedView>
                       </ThemedView>
                     )}
                   />

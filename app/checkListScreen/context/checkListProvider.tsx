@@ -21,20 +21,23 @@ const CheckListContext = createContext<CheckListContextType | undefined>(
   undefined
 );
 
+const EMPTY_QUESTIONS: QuestionInterface[] = [
+  {
+    id: randomIdGenerator(),
+    text: '',
+    type: 'Párrafo',
+    inputs: [{ id: randomIdGenerator(), value: 'Opción 1' }],
+  },
+];
+
 const CheckListProvider = ({ children }: CheckListProviderProps) => {
   const user = useUserStore((state) => state.user);
   const { customHeader } = useCustomHeader();
   const [client, setClient] = useState<ClientInterface>({} as ClientInterface);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [questions, setQuestions] = useState<QuestionInterface[]>([
-    {
-      id: randomIdGenerator(),
-      text: '',
-      type: 'Párrafo',
-      inputs: [{ id: randomIdGenerator(), value: '' }],
-    },
-  ]);
+  const [questions, setQuestions] =
+    useState<QuestionInterface[]>(EMPTY_QUESTIONS);
 
   //function to add a new question
   const handleAddQuestion = () => {
@@ -44,7 +47,7 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
         id: randomIdGenerator(),
         text: '',
         type: 'Párrafo',
-        inputs: [{ id: randomIdGenerator(), value: '' }],
+        inputs: [{ id: randomIdGenerator(), value: 'Opción 1' }],
       },
     ]);
   };
@@ -132,6 +135,13 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
     );
   };
 
+  function resetState() {
+    setQuestions(EMPTY_QUESTIONS);
+    setTitle('');
+    setDescription('');
+    setClient({} as ClientInterface);
+  }
+
   //fn to register a new form into DB
   async function handleRegisterForm() {
     const dataBody = {
@@ -152,6 +162,7 @@ const CheckListProvider = ({ children }: CheckListProviderProps) => {
       );
 
       Alert.alert('Éxito', 'Formulario creado correctamente');
+      resetState();
       router.navigate('/(tabs)');
 
       return data;
