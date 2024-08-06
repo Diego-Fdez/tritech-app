@@ -1,4 +1,7 @@
-import { AdaptedCheckListResponse } from '../interfaces/checkListByIdInterfaces';
+import {
+  AdaptedCheckListResponse,
+  AnswerMockInterface,
+} from '../interfaces/checkListByIdInterfaces';
 
 export const CHECKLIST_MOCK: AdaptedCheckListResponse[] = [
   {
@@ -23,5 +26,14 @@ export const CHECKLIST_MOCK: AdaptedCheckListResponse[] = [
         ],
       },
     ],
+  },
+];
+
+export const ANSWERS_MOCK: AnswerMockInterface[] = [
+  {
+    questionId: '',
+    answerValue: '',
+    optionId: '',
+    questionType: '',
   },
 ];

@@ -37,3 +37,15 @@ export interface AdaptedCheckListResponse {
   createdBy: string;
   questions: QuestionsDataResponseInterface[];
 }
+
+export interface AnswerMockInterface {
+  questionId: string;
+  answerValue: string;
+  optionId: string;
+  questionType: string;
+}
+
+export interface CheckBoxSelectedItemInterface {
+  id: string;
+  text: string;
+}

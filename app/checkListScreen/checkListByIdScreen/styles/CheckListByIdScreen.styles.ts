@@ -9,14 +9,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   wrapper: {
-    flex: 1,
     width: '100%',
+    flex: 1,
     position: 'relative',
     paddingHorizontal: normalize(20, 'width'),
     marginTop: '21%',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    paddingBottom: normalize(20, 'height'),
   },
   title: {
     width: '100%',
@@ -37,6 +36,7 @@ export const styles = StyleSheet.create({
     marginBottom: normalize(15, 'height'),
   },
   formContainer: {
+    flex: 1,
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
@@ -46,10 +46,18 @@ export const styles = StyleSheet.create({
     marginBottom: normalize(5, 'height'),
   },
   questionOptionContainer: {
+    flex: 1,
     width: '100%',
     alignSelf: 'center',
     justifyContent: 'flex-start',
     flexDirection: 'row',
     gap: normalize(5, 'width'),
+  },
+  checkBoxContainer: {
+    width: '100%',
+    flex: 1,
+  },
+  saveButton: {
+    marginVertical: normalize(20, 'height'),
   },
 });

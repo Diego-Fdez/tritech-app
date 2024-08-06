@@ -1,5 +1,5 @@
 import {
-  AdaptedCheckListResponse,
+  AnswerMockInterface,
   CheckListDataResponseInterface,
   OptionsDataResponseInterface,
   QuestionsDataResponseInterface,
@@ -28,5 +28,16 @@ export function checkListDataAdapter(form: CheckListDataResponseInterface[]) {
         ),
       })
     ),
+  }));
+}
+
+export function checkListBodyAdapter(answers: AnswerMockInterface[]) {
+  const cleanedAnswers = answers.filter(
+    (answer) => answer.questionId.length > 0
+  );
+
+  return cleanedAnswers?.map((answer: AnswerMockInterface) => ({
+    questionId: answer?.questionId,
+    answerValue: answer?.answerValue,
   }));
 }

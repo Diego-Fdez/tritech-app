@@ -2,7 +2,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  FlatList,
+  ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BouncyCheckboxGroup, {
@@ -31,6 +31,8 @@ const CheckListByIdScreen = () => {
     checkBoxGroupStyles,
     colorScheme,
     createCheckBoxGroup,
+    handleAddAnswerValue,
+    mutation,
   } = useCheckListByIdScreen();
 
   return (
@@ -49,11 +51,11 @@ const CheckListByIdScreen = () => {
           {isPending ? (
             <LoaderView />
           ) : (
-            <>
+            <ThemedView style={styles.wrapper}>
               {isError ? (
                 <ErrorView title='Oops! ocurrió un problema al cargar el formulario.' />
               ) : (
-                <ThemedView style={styles.wrapper}>
+                <>
                   <ThemedText type='subtitle' style={styles.title}>
                     {data?.[0]?.title}
                   </ThemedText>
@@ -63,13 +65,9 @@ const CheckListByIdScreen = () => {
                   <ThemedText style={styles.client}>
                     Cliente: {data?.[0]?.clientName}
                   </ThemedText>
-                  <FlatList
-                    data={data?.[0].questions}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    style={{ width: '100%' }}
-                    renderItem={({ item }) => (
-                      <ThemedView style={styles.formContainer}>
+                  <ScrollView showsVerticalScrollIndicator={false}>
+                    {data?.[0].questions?.map((item) => (
+                      <ThemedView style={styles.formContainer} key={item?.id}>
                         <ThemedText
                           type='defaultSemiBold'
                           style={styles.questionText}
@@ -78,18 +76,24 @@ const CheckListByIdScreen = () => {
                         </ThemedText>
                         <ThemedView style={styles.formContainer}>
                           {item?.typeQuestion === QuestionTypes.SINGLE ? (
-                            <BouncyCheckboxGroup
-                              data={createCheckBoxGroup(item.options)}
-                              style={{ flexDirection: 'column' }}
-                              checkboxProps={{ ...checkBoxGroupStyles }}
-                              onChange={(selectedItem: CheckboxButton) => {
-                                const { textComponent, ...rest } = selectedItem;
-                                console.log(
-                                  'SelectedItem: ',
-                                  JSON.stringify(rest)
-                                );
-                              }}
-                            />
+                            <ThemedView style={styles.checkBoxContainer}>
+                              <BouncyCheckboxGroup
+                                data={createCheckBoxGroup(item.options)}
+                                style={{ flexDirection: 'column' }}
+                                checkboxProps={{ ...checkBoxGroupStyles }}
+                                onChange={(selectedItem: CheckboxButton) => {
+                                  const { textComponent, ...rest } =
+                                    selectedItem;
+
+                                  handleAddAnswerValue(
+                                    rest.text ?? '',
+                                    String(rest.id),
+                                    item.id,
+                                    item.typeQuestion
+                                  );
+                                }}
+                              />
+                            </ThemedView>
                           ) : item?.typeQuestion === QuestionTypes.TEXT ? (
                             <ThemedView style={styles.questionOptionContainer}>
                               <ThemedInput
@@ -97,10 +101,18 @@ const CheckListByIdScreen = () => {
                                 placeholderTextColor={
                                   Colors[colorScheme ?? 'light'].tabIconDefault
                                 }
+                                onChangeText={(text) =>
+                                  handleAddAnswerValue(
+                                    text,
+                                    item?.options[0]?.id,
+                                    item?.id,
+                                    item?.typeQuestion
+                                  )
+                                }
                               />
                             </ThemedView>
                           ) : (
-                            <>
+                            <ThemedView style={styles.checkBoxContainer}>
                               {item?.options?.map((option) => (
                                 <BouncyCheckbox
                                   key={option.id}
@@ -121,18 +133,36 @@ const CheckListByIdScreen = () => {
                                     textDecorationLine: 'none',
                                   }}
                                   text={option?.optionText}
+                                  onPress={(isChecked: boolean) =>
+                                    handleAddAnswerValue(
+                                      option?.optionText,
+                                      option?.id,
+                                      option?.questionId,
+                                      item.typeQuestion,
+                                      isChecked
+                                    )
+                                  }
                                 />
                               ))}
-                            </>
+                            </ThemedView>
                           )}
                         </ThemedView>
                       </ThemedView>
-                    )}
-                  />
-                  <ThemedButton title='Guardar Formulario' />
-                </ThemedView>
+                    ))}
+                    <ThemedButton
+                      style={styles.saveButton}
+                      handlePress={() => mutation.mutate()}
+                      title={
+                        mutation.isPending
+                          ? 'Guardando...'
+                          : 'Guardar Formulario'
+                      }
+                      disabled={mutation.isPending}
+                    />
+                  </ScrollView>
+                </>
               )}
-            </>
+            </ThemedView>
           )}
         </ThemedView>
       </KeyboardAvoidingView>
