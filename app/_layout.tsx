@@ -78,6 +78,7 @@ export default function RootLayout() {
             <Stack.Screen name='temperatureTemplate' />
             <Stack.Screen name='+not-found' />
             <Stack.Screen name='(tabs)' />
+            <Stack.Screen name='checkListScreen' />
           </Stack>
         </ThemeProvider>
       </QueryClientProvider>

@@ -18,8 +18,10 @@ import { ANSWERS_MOCK, CHECKLIST_MOCK } from '../mocks';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemedText } from '@/components';
 import { QuestionTypes } from '../../interfaces';
+import { useUserStore } from '@/store';
 
 const useCheckListByIdScreen = () => {
+  const user = useUserStore((state) => state.user);
   const { customHeader } = useCustomHeader();
   const { id } = useLocalSearchParams();
   const colorScheme = useColorScheme();
@@ -140,14 +142,17 @@ const useCheckListByIdScreen = () => {
     const answersBody = checkListBodyAdapter(answers);
 
     try {
-      const { data }: any = await axios.post(
-        `${API_URL}/answer`,
+      const { data: response }: any = await axios.post(
+        `${API_URL}/answer/${user.id}?formId=${data?.[0].id}`,
         { answers: answersBody },
         customHeader
       );
-      //console.log(data)
+
       resetState();
-      return data;
+      Alert.alert('Éxito', 'Respuestas registradas correctamente.');
+      //router.navigate(`/nuevaURL/${response.data.id}`)
+
+      return response;
     } catch (error) {
       const errorResult: ErrorResponse = handleErrors(error);
 

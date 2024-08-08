@@ -155,7 +155,7 @@ const CheckListByIdScreen = () => {
                       title={
                         mutation.isPending
                           ? 'Guardando...'
-                          : 'Guardar Formulario'
+                          : 'Guardar respuestas'
                       }
                       disabled={mutation.isPending}
                     />
